@@ -34,5 +34,11 @@ namespace WpfMvvmToolkit.Commands
         {
             _executeDelegate();
         }
+
+        public void NotifyCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
+
     }
 }

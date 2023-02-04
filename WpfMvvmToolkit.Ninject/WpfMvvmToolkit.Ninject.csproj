@@ -1,17 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>WPF MVVM Toolkit Ninject</Title>
+		<Description>For ninject dependancy injection</Description>
+		<PackageProjectUrl>https://github.com/RyanFitzsimmons/WpfMvvmToolkit</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/RyanFitzsimmons/WpfMvvmToolkit</RepositoryUrl>
+		<PackageTags>WPF MVVM Simple Basic Configuration Commands</PackageTags>
+		<PackageReleaseNotes>The first release</PackageReleaseNotes>
+		<Authors>Ryan Fitzsimmons</Authors>
+		<Version>1.0.1</Version>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Ninject" Version="3.3.6" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\WpfMvvmToolkit\WpfMvvmToolkit.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Ninject" Version="3.3.6" />
+		<PackageReference Include="WpfMvvmToolkit" Version="1.0.1" />
+	</ItemGroup>
 
 </Project>

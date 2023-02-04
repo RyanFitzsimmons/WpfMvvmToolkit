@@ -45,6 +45,11 @@ namespace WpfMvvmToolkit.Commands
             _executeDelegate(argument);
         }
 
+        public void NotifyCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         private static ArgumentException GetArgumentException(object? parameter)
         {
             return new ArgumentException($"The parameter must be of type {typeof(T)}.");

@@ -1,17 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>WPF MVVM Toolkit Serilog</Title>
+		<Description>For using Serilog file sink with the WpfMvvmToolkit</Description>
+		<PackageProjectUrl>https://github.com/RyanFitzsimmons/WpfMvvmToolkit</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/RyanFitzsimmons/WpfMvvmToolkit</RepositoryUrl>
+		<PackageTags>WPF MVVM Simple Basic Configuration Commands</PackageTags>
+		<PackageReleaseNotes>The first release</PackageReleaseNotes>
+		<Authors>Ryan Fitzsimmons</Authors>
+		<Version>1.0.1</Version>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\WpfMvvmToolkit\WpfMvvmToolkit.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+		<PackageReference Include="WpfMvvmToolkit" Version="1.0.1" />
+	</ItemGroup>
 
 </Project>

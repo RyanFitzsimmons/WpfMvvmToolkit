@@ -1,17 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>WPF MVVM Toolkit</Title>
-    <Description>A collection of basic tools</Description>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>WPF MVVM Toolkit</Title>
+		<Description>A collection of basic tools</Description>
+		<PackageProjectUrl>https://github.com/RyanFitzsimmons/WpfMvvmToolkit</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/RyanFitzsimmons/WpfMvvmToolkit</RepositoryUrl>
+		<PackageTags>WPF MVVM Simple Basic Configuration Commands</PackageTags>
+		<PackageReleaseNotes>The first release</PackageReleaseNotes>
+		<Authors>Ryan Fitzsimmons</Authors>
+		<Version>1.0.2</Version>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Behaviours\" />
-    <Folder Include="Converters\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Behaviours\" />
+		<Folder Include="Converters\" />
+	</ItemGroup>
 
 </Project>
