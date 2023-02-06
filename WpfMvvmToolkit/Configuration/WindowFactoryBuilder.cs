@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using WpfMvvmToolkit.Messaging;
 
 namespace WpfMvvmToolkit.Configuration
 {
     public abstract class WindowFactoryBuilder
     {
-        private List<Action<IServiceContainer>> _configureDelegates = new();
-        private List<Action<IWindowRegistry>> _registerDelegates = new();
+        private readonly List<Action<IServiceContainer>> _configureDelegates = new();
+        private readonly List<Action<IWindowRegistry>> _registerDelegates = new();
 
         public WindowFactoryBuilder ConfigureServices(Action<IServiceContainer> configureDelegate)
         {
@@ -20,11 +21,17 @@ namespace WpfMvvmToolkit.Configuration
             return this;
         }
 
+        private void ConfigureBuiltInServices(IServiceContainer container)
+        {
+            container.Register<IMessageService, MessageService>(ScopeType.Singleton);
+        }
+
         public IWindowFactory Build()
         {
             var serviceContainer = GetServiceContainer();
             serviceContainer.RegisterConstant(serviceContainer);
             serviceContainer.Register<IWindowRegistry, WindowRegistry>(ScopeType.Singleton);
+            ConfigureBuiltInServices(serviceContainer);
 
             foreach (var configure in _configureDelegates)
             {

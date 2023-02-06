@@ -10,8 +10,8 @@ namespace WpfMvvmToolkit.Configuration
     {
         private readonly Dictionary<Type, WindowRegistration> _viewRegistrationLookup = new();
         private readonly Dictionary<Type, WindowRegistration> _viewModelRegistrationLookup = new();
-        private readonly Dictionary<IWindowViewModel, Window> _activeWindows = new();
-        private readonly Dictionary<IWindowViewModel, Action<WindowParameters>?> _callbacks = new();
+        private readonly Dictionary<IWindowViewModel, IWindowView> _activeWindows = new();
+        private readonly Dictionary<IWindowViewModel, Action<IWindowResult>?> _callbacks = new();
         private readonly IServiceContainer _serviceContainer;
 
         public WindowRegistry(IServiceContainer serviceContainer)
@@ -20,7 +20,7 @@ namespace WpfMvvmToolkit.Configuration
         }
 
         public void Register<TWindowView, TWindowViewModel>(ScopeType scope)
-            where TWindowView : Window
+            where TWindowView : Window, IWindowView
             where TWindowViewModel : IWindowViewModel
         {
             if (_viewRegistrationLookup.ContainsKey(typeof(TWindowView)))
@@ -36,12 +36,12 @@ namespace WpfMvvmToolkit.Configuration
             _viewModelRegistrationLookup.Add(typeof(TWindowViewModel), windowRegistration);
         }
 
-        public Window Get<TWindowViewModel>(WindowParameters? parameters = null, Action<WindowParameters>? callback = null)
+        public IWindowView Get<TWindowViewModel>(WindowParameters? parameters = null, Action<IWindowResult>? callback = null)
             where TWindowViewModel : IWindowViewModel
         {
             if (!_viewModelRegistrationLookup.ContainsKey(typeof(TWindowViewModel)))
             {
-                throw new ArgumentNullException($"The view model {typeof(TWindowViewModel).Name} was never registered.");
+                throw new ArgumentException($"The view model {typeof(TWindowViewModel).Name} was never registered.");
             }
 
             var registration = _viewModelRegistrationLookup[typeof(TWindowViewModel)];
@@ -50,7 +50,7 @@ namespace WpfMvvmToolkit.Configuration
             viewModel.OnOpen(parameters);
             viewModel.Close += ViewModel_Close;
 
-            var view = (Window)_serviceContainer.Get(registration.ViewType);
+            var view = (IWindowView)_serviceContainer.Get(registration.ViewType);
             view.DataContext = viewModel;
             view.Loaded += View_Loaded;
             view.Unloaded += View_Unloaded;
@@ -110,7 +110,7 @@ namespace WpfMvvmToolkit.Configuration
 
         private void View_Closed(object? sender, EventArgs e)
         {
-            if (sender is not Window window)
+            if (sender is not IWindowView window)
             {
                 throw new Exception($"The sender is not the window");
             }
@@ -125,16 +125,19 @@ namespace WpfMvvmToolkit.Configuration
             window.Closing -= View_Closing;
             window.Closed -= View_Closed;
 
-            viewModel.OnClose(_callbacks[viewModel]);
+            viewModel.OnClose();
+            _callbacks[viewModel]?.Invoke(window.Result ?? new WindowResult(viewModel, new(), ""));
 
             viewModel.Close -= ViewModel_Close;
             _callbacks.Remove(viewModel);
             _activeWindows.Remove(viewModel);
         }
 
-        private void ViewModel_Close(IWindowViewModel viewModel)
+        private void ViewModel_Close(IWindowResult result)
         {
-            _activeWindows[viewModel].Close();
+            var window = _activeWindows[result.ViewModel];
+            window.Result = result;
+            window.Close();
         }
     }
 }

@@ -6,9 +6,9 @@ namespace WpfMvvmToolkit.Configuration
 {
     public interface IWindowRegistry
     {
-        Window Get<TWindowViewModel>(WindowParameters? parameters = null, Action<WindowParameters>? callback = null) where TWindowViewModel : IWindowViewModel;
+        IWindowView Get<TWindowViewModel>(WindowParameters? parameters = null, Action<IWindowResult>? callback = null) where TWindowViewModel : IWindowViewModel;
         void Register<TWindowView, TWindowViewModel>(ScopeType scope)
-            where TWindowView : Window
+            where TWindowView : Window, IWindowView
             where TWindowViewModel : IWindowViewModel;
     }
 }
