@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace WpfMvvmToolkit.Windows
+namespace WpfMvvmToolkit.Navigation
 {
-    public class WindowParameters : Dictionary<string, object>
+    public class NavigationParameters : Dictionary<string, object>
     {
         public bool TryGetValueOrDefault<T>(string key, out T? value)
         {
@@ -35,11 +35,6 @@ namespace WpfMvvmToolkit.Windows
             }
 
             return t;
-        }
-
-        public T GetValue<T>(string key)
-        {
-            return (T)this[key];
         }
     }
 }

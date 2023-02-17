@@ -14,12 +14,22 @@ namespace WpfMvvmToolkit.Configuration
 
         public void Show<TWindowViewModel>(WindowParameters? parameters = null, Action<IWindowResult>? callback = null) where TWindowViewModel : class, IWindowViewModel
         {
+            if (parameters == null)
+            {
+                parameters = new();
+            }
+
             var view = _windowRegistry.Get<TWindowViewModel>(parameters, callback);
             view.Show();
         }
 
         public bool? ShowDialog<TWindowViewModel>(WindowParameters? parameters = null, Action<IWindowResult>? callback = null) where TWindowViewModel : class, IWindowViewModel
         {
+            if (parameters == null)
+            {
+                parameters = new();
+            }
+
             var view = _windowRegistry.Get<TWindowViewModel>(parameters, callback);
             return view.ShowDialog();
         }

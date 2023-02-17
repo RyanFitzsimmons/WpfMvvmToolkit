@@ -5,7 +5,14 @@ namespace WpfMvvmToolkit.Messaging
 {
     public class MessageService : IMessageService
     {
+        private readonly Dictionary<object, List<IMessageSubscriptionToken>> _hostSubscriptions = new();
         private readonly Dictionary<Type, Dictionary<Guid, IMessageSubscriptionToken>> _subscriptions = new();
+
+        public TRequest Send<TMessage, TRequest>(TMessage message) where TMessage : RequestMessage<TRequest>
+        {
+            Send(message);
+            return message.Requested;
+        }
 
         public void Send<TMessage>(TMessage message) where TMessage : class
         {
@@ -20,6 +27,16 @@ namespace WpfMvvmToolkit.Messaging
             {
                 subscription.Invoke(message);
             }
+        }
+
+        public void Subscribe<TMessage>(object host, Action<TMessage> messageDelegate) where TMessage : class
+        {
+            if (!_hostSubscriptions.ContainsKey(host))
+            {
+                _hostSubscriptions.Add(host, new());
+            }
+
+            _hostSubscriptions[host].Add(Subscribe(messageDelegate));
         }
 
         public IMessageSubscriptionToken Subscribe<TMessage>(Action<TMessage> messageDelegate) where TMessage : class
@@ -39,6 +56,21 @@ namespace WpfMvvmToolkit.Messaging
             _subscriptions[token.MessageType].Add(token.Guid, token);
 
             return token;
+        }
+
+        public void UnsubscribeFromAll(object host)
+        {
+            if (!_hostSubscriptions.ContainsKey(host))
+            {
+                throw new Exception("There are no subscriptions for the host.");
+            }
+
+            foreach (var token in _hostSubscriptions[host])
+            {
+                Unsubscribe(token);
+            }
+
+            _hostSubscriptions.Remove(host);
         }
 
         public void Unsubscribe(IMessageSubscriptionToken token)

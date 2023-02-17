@@ -7,11 +7,17 @@ namespace WpfMvvmToolkit
 {
     public class ObservableObject : INotifyPropertyChanged, INotifyPropertyChanging
     {
+        private bool _hasChanged;
+
         public event PropertyChangingEventHandler? PropertyChanging;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public bool IsPropertyChangeMonitoringEnabled { get; set; } = true;
-        public bool HasChanged { get; set; }
+        public bool HasChanged
+        {
+            get => _hasChanged;
+            set => SetProperty(ref _hasChanged, value);
+        }
 
         protected bool SetProperty<T>([NotNullIfNotNull(nameof(newValue))] ref T field, T newValue, [CallerMemberName] string? propertyName = null)
         {
@@ -35,7 +41,7 @@ namespace WpfMvvmToolkit
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-            if (IsPropertyChangeMonitoringEnabled)
+            if (propertyName != nameof(HasChanged) && IsPropertyChangeMonitoringEnabled)
             {
                 HasChanged = true;
             }

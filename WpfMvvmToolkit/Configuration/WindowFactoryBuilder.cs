@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using WpfMvvmToolkit.Messaging;
+using WpfMvvmToolkit.Navigation;
 
 namespace WpfMvvmToolkit.Configuration
 {
@@ -24,6 +25,7 @@ namespace WpfMvvmToolkit.Configuration
         private void ConfigureBuiltInServices(IServiceContainer container)
         {
             container.Register<IMessageService, MessageService>(ScopeType.Singleton);
+            container.Register<INavigationService, NavigationService>(ScopeType.Singleton);
         }
 
         public IWindowFactory Build()
