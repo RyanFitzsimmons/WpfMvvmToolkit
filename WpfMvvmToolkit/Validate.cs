@@ -31,12 +31,20 @@ namespace WpfMvvmToolkit
             }
         }
 
-        public static IEnumerable<string> Directory(DirectoryInfo directory, bool canBeEmpty = false, bool shouldExist = false)
+        public static IEnumerable<string> Directory(string? directoryPath, bool canBeEmpty = false, bool shouldExist = false)
         {
-            if (!canBeEmpty && string.IsNullOrWhiteSpace(directory.FullName))
+            if ((shouldExist || !canBeEmpty) && string.IsNullOrWhiteSpace(directoryPath))
             {
                 yield return "The path cannot be empty";
+                yield break;
             }
+
+            if (string.IsNullOrWhiteSpace(directoryPath))
+            {
+                yield break;
+            }
+
+            DirectoryInfo directory = new(directoryPath);
 
             if (shouldExist && !directory.Exists)
             {
@@ -49,12 +57,20 @@ namespace WpfMvvmToolkit
             }
         }
 
-        public static IEnumerable<string> File(FileInfo file, bool canBeEmpty = false, bool shouldExist = false)
+        public static IEnumerable<string> File(string? filePath, bool canBeEmpty = false, bool shouldExist = false)
         {
-            if (!canBeEmpty && string.IsNullOrWhiteSpace(file.FullName))
+            if ((shouldExist || !canBeEmpty) && string.IsNullOrWhiteSpace(filePath))
             {
                 yield return "The path cannot be empty";
+                yield break;
             }
+
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                yield break;
+            }
+
+            FileInfo file = new(filePath);
 
             if (shouldExist && !file.Exists)
             {
