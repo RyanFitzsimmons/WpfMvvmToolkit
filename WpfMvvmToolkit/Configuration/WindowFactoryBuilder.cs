@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using WpfMvvmToolkit.Messaging;
 using WpfMvvmToolkit.Navigation;
+using WpfMvvmToolkit.Serialization;
 
 namespace WpfMvvmToolkit.Configuration
 {
@@ -26,6 +27,7 @@ namespace WpfMvvmToolkit.Configuration
         {
             container.Register<IMessageService, MessageService>(ScopeType.Singleton);
             container.Register<INavigationService, NavigationService>(ScopeType.Singleton);
+            container.Register<IJsonSerializationService, JsonSerializationService>(ScopeType.Singleton);
         }
 
         public IWindowFactory Build()
