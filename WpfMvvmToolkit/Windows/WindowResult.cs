@@ -2,6 +2,13 @@
 {
     public class WindowResult : IWindowResult
     {
+        public WindowResult(IWindowViewModel viewModel)
+        {
+            ViewModel = viewModel;
+            Parameters = new();
+            Button = "None";
+        }
+
         public WindowResult(IWindowViewModel viewModel, WindowParameters parameters, string button)
         {
             ViewModel = viewModel;
