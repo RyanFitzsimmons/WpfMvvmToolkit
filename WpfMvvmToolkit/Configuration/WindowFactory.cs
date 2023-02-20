@@ -12,7 +12,7 @@ namespace WpfMvvmToolkit.Configuration
             _windowRegistry = viewRegistry;
         }
 
-        public void Show<TWindowViewModel>(WindowParameters? parameters = null, Action<IWindowResult>? callback = null) where TWindowViewModel : class, IWindowViewModel
+        public void Show<TWindowViewModel>(NavigationParameters? parameters = null, Action<IWindowResult>? callback = null) where TWindowViewModel : class, IWindowViewModel
         {
             if (parameters == null)
             {
@@ -23,7 +23,7 @@ namespace WpfMvvmToolkit.Configuration
             view.Show();
         }
 
-        public bool? ShowDialog<TWindowViewModel>(WindowParameters? parameters = null, Action<IWindowResult>? callback = null) where TWindowViewModel : class, IWindowViewModel
+        public bool? ShowDialog<TWindowViewModel>(NavigationParameters? parameters = null, Action<IWindowResult>? callback = null) where TWindowViewModel : class, IWindowViewModel
         {
             if (parameters == null)
             {

@@ -41,7 +41,7 @@ namespace WpfMvvmToolkit.Configuration
             _viewModelRegistrationLookup.Add(viewModel, windowRegistration);
         }
 
-        public IWindowView Get<TWindowViewModel>(WindowParameters parameters, Action<IWindowResult>? callback = null)
+        public IWindowView Get<TWindowViewModel>(NavigationParameters parameters, Action<IWindowResult>? callback = null)
             where TWindowViewModel : IWindowViewModel
         {
             if (!_viewModelRegistrationLookup.ContainsKey(typeof(TWindowViewModel)))

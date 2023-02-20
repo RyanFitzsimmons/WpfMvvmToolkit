@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WpfMvvmToolkit.Navigation
+namespace WpfMvvmToolkit
 {
     public class NavigationParameters : Dictionary<string, object>
     {
@@ -35,6 +35,11 @@ namespace WpfMvvmToolkit.Navigation
             }
 
             return t;
+        }
+
+        public T GetValue<T>(string key)
+        {
+            return (T)this[key];
         }
     }
 }

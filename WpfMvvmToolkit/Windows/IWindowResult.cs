@@ -2,7 +2,7 @@
 {
     public interface IWindowResult
     {
-        WindowParameters Parameters { get; }
+        NavigationParameters Parameters { get; }
         string Button { get; }
         IWindowViewModel ViewModel { get; }
     }

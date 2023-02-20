@@ -9,7 +9,7 @@
             Button = "None";
         }
 
-        public WindowResult(IWindowViewModel viewModel, WindowParameters parameters, string button)
+        public WindowResult(IWindowViewModel viewModel, NavigationParameters parameters, string button)
         {
             ViewModel = viewModel;
             Parameters = parameters;
@@ -17,7 +17,7 @@
         }
 
         public IWindowViewModel ViewModel { get; }
-        public WindowParameters Parameters { get; }
+        public NavigationParameters Parameters { get; }
         public string Button { get; }
     }
 }
