@@ -4,6 +4,6 @@ namespace WpfMvvmToolkit.Navigation
 {
     public interface INavigationService
     {
-        Task Start(INavigationHost host, INavigationAware view, NavigationParameters parameters);
+        Task Start(INavigationHost host, INavigationAware viewModel, NavigationParameters parameters);
     }
 }

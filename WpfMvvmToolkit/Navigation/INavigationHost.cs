@@ -3,6 +3,6 @@
     public interface INavigationHost
     {
         INavigationAware? DisplayedViewModel { get; set; }
-        void Close(NavigationParameters parameters);
+        void OnNavigationEnded(NavigationParameters parameters);
     }
 }

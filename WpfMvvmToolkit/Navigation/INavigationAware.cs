@@ -7,6 +7,7 @@ namespace WpfMvvmToolkit.Navigation
     {
         event EventHandler<NavigateEventArgs>? NavigateTo;
         event EventHandler<NavigationParametersEventArgs>? GoBack;
+        event EventHandler<NavigationParametersEventArgs>? EndNavigation;
 
         bool CanNavigate(NavigationParameters parameters);
         Task OnNavigateTo(NavigationParameters parameters);

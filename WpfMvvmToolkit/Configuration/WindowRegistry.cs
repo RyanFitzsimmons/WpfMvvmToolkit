@@ -23,17 +23,22 @@ namespace WpfMvvmToolkit.Configuration
             where TWindowView : Window, IWindowView
             where TWindowViewModel : IWindowViewModel
         {
-            if (_viewRegistrationLookup.ContainsKey(typeof(TWindowView)))
+            Register(typeof(TWindowView), typeof(TWindowViewModel), scope);
+        }
+
+        public void Register(Type view, Type viewModel, ScopeType scope)
+        {
+            if (_viewRegistrationLookup.ContainsKey(view))
             {
-                throw new ArgumentException($"The view {typeof(TWindowView).Name} has already been registered.");
+                throw new ArgumentException($"The view {view.Name} has already been registered.");
             }
 
-            _serviceContainer.RegisterToSelf(typeof(TWindowView), scope);
-            _serviceContainer.RegisterToSelf(typeof(TWindowViewModel), scope);
+            _serviceContainer.RegisterToSelf(view, ScopeType.Transient);
+            _serviceContainer.RegisterToSelf(viewModel, scope);
 
-            var windowRegistration = new WindowRegistration(typeof(TWindowView), typeof(TWindowViewModel), scope);
-            _viewRegistrationLookup.Add(typeof(TWindowView), windowRegistration);
-            _viewModelRegistrationLookup.Add(typeof(TWindowViewModel), windowRegistration);
+            var windowRegistration = new WindowRegistration(view, viewModel, scope);
+            _viewRegistrationLookup.Add(view, windowRegistration);
+            _viewModelRegistrationLookup.Add(viewModel, windowRegistration);
         }
 
         public IWindowView Get<TWindowViewModel>(WindowParameters parameters, Action<IWindowResult>? callback = null)

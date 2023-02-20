@@ -4,6 +4,7 @@
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
+		<UseWindowsForms>true</UseWindowsForms>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>WPF MVVM Toolkit</Title>
 		<Description>A collection of basic tools</Description>

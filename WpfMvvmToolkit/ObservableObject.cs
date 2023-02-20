@@ -32,12 +32,12 @@ namespace WpfMvvmToolkit
             return true;
         }
 
-        protected void OnPropertyChanging([CallerMemberName] string? propertyName = null)
+        protected virtual void OnPropertyChanging([CallerMemberName] string? propertyName = null)
         {
             PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
         }
 
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
