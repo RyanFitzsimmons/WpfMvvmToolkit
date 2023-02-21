@@ -34,7 +34,7 @@ namespace WpfMvvmToolkit.Serialization
             }
             finally
             {
-                UnlockFile(filePath);
+                await UnlockFile(filePath);
             }
         }
 
@@ -62,7 +62,7 @@ namespace WpfMvvmToolkit.Serialization
             }
             finally
             {
-                UnlockFile(filePath);
+                await UnlockFile(filePath);
             }
         }
 
@@ -94,9 +94,14 @@ namespace WpfMvvmToolkit.Serialization
             }
         }
 
-        private void UnlockFile(string filePath)
+        private async Task UnlockFile(string filePath)
         {
-            _lockStream?.Close();
+            if (_lockStream == null)
+            {
+                return;
+            }
+
+            await _lockStream.DisposeAsync();
             DeleteLockFile(filePath);
         }
 
