@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -7,6 +8,7 @@ namespace WpfMvvmToolkit
 {
     public class ObservableObject : INotifyPropertyChanged, INotifyPropertyChanging
     {
+        private readonly Dictionary<string, List<Action>> _propertyChangedDelegates = new();
         private bool _hasChanged;
 
         public event PropertyChangingEventHandler? PropertyChanging;
@@ -29,7 +31,41 @@ namespace WpfMvvmToolkit
             OnPropertyChanging(propertyName);
             field = newValue;
             OnPropertyChanged(propertyName);
+            InvokePropertyChangedDelegates(propertyName);
             return true;
+        }
+
+        private void InvokePropertyChangedDelegates(string? propertyName)
+        {
+            if (propertyName == null)
+            {
+                return;
+            }
+
+            if (!_propertyChangedDelegates.ContainsKey(propertyName))
+            {
+                return;
+            }
+
+            foreach (var propertyChangedDelegate in _propertyChangedDelegates[propertyName])
+            {
+                propertyChangedDelegate();
+            }
+        }
+
+        public void AddPropertyChangedDeletegate(string propertyName, Action propertyChangeDelegate)
+        {
+            if (!_propertyChangedDelegates.ContainsKey(propertyName))
+            {
+                _propertyChangedDelegates.Add(propertyName, new());
+            }
+
+            _propertyChangedDelegates[propertyName].Add(propertyChangeDelegate);
+        }
+
+        public void RemoveAllPropertyChangedDelegates()
+        {
+            _propertyChangedDelegates.Clear();
         }
 
         protected virtual void OnPropertyChanging([CallerMemberName] string? propertyName = null)
