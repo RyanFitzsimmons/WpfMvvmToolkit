@@ -10,40 +10,66 @@ namespace WpfMvvmToolkit.Navigation
         private readonly Dictionary<INavigationHost, List<INavigationAware>> _viewModels = new();
         private readonly Dictionary<INavigationAware, INavigationHost> _currentViewModel = new();
 
-        public async Task Start(INavigationHost host, INavigationAware viewModel, NavigationParameters parameters)
+        public async Task StartNavigation(INavigationHost host, INavigationAware viewModel, NavigationParameters? parameters = null)
         {
             if (_viewModels.ContainsKey(host))
             {
                 throw new Exception("The host is already registered.");
             }
 
+            if (parameters == null)
+            {
+                parameters = new();
+            }
+
             _viewModels.Add(host, new());
             await NavigateToView(host, viewModel, parameters);
         }
 
-        private async void ViewModel_GoBack(object? sender, NavigationParametersEventArgs e)
+        public async Task Navigate(INavigationAware from, INavigationAware to, NavigationParameters? parameters = null)
         {
-            if (sender is not INavigationAware from)
-            {
-                throw new Exception($"The sender is not {nameof(INavigationAware)}.");
-            }
-
             if (!_currentViewModel.ContainsKey(from))
             {
                 throw new Exception($"The view is not the current view");
             }
 
-            if (!from.CanNavigate(e.Parameters))
+            if (parameters == null)
+            {
+                parameters = new();
+            }
+
+            if (!from.CanNavigate(parameters))
             {
                 return;
             }
 
-            var host = await NavigateFromView(from, e.Parameters);
+            var host = await NavigateFromView(from, parameters);
+            await NavigateToView(host, to, parameters);
+        }
+
+        public async Task NavigateBack(INavigationAware from, NavigationParameters? parameters = null)
+        {
+            if (!_currentViewModel.ContainsKey(from))
+            {
+                throw new Exception($"The view is not the current view");
+            }
+
+            if (parameters == null)
+            {
+                parameters = new();
+            }
+
+            if (!from.CanNavigate(parameters))
+            {
+                return;
+            }
+
+            var host = await NavigateFromView(from, parameters);
 
             var viewCount = _viewModels[host].Count;
             if (viewCount < 2)
             {
-                End(host, e.Parameters);
+                End(host, parameters);
                 return;
             }
 
@@ -51,7 +77,28 @@ namespace WpfMvvmToolkit.Navigation
             var to = _viewModels[host].Last();
 
             _viewModels[host].RemoveAt(_viewModels[host].Count - 1);
-            await NavigateToView(host, to, e.Parameters);
+            await NavigateToView(host, to, parameters);
+        }
+
+        public async Task EndNavigation(INavigationAware from, NavigationParameters? parameters = null)
+        {
+            if (!_currentViewModel.ContainsKey(from))
+            {
+                throw new Exception($"The view is not the current view");
+            }
+
+            if (parameters == null)
+            {
+                parameters = new();
+            }
+
+            if (!from.CanNavigate(parameters))
+            {
+                return;
+            }
+
+            var host = await NavigateFromView(from, parameters);
+            End(host, parameters);
         }
 
         private void End(INavigationHost host, NavigationParameters parameters)
@@ -61,32 +108,8 @@ namespace WpfMvvmToolkit.Navigation
             host.OnNavigationEnded(parameters);
         }
 
-        private async void ViewModel_NavigateTo(object? sender, NavigateEventArgs e)
-        {
-            if (sender is not INavigationAware from)
-            {
-                throw new Exception($"The sender is not {nameof(INavigationAware)}.");
-            }
-
-            if (!_currentViewModel.ContainsKey(from))
-            {
-                throw new Exception($"The view is not the current view");
-            }
-
-            if (!from.CanNavigate(e.Parameters))
-            {
-                return;
-            }
-
-            var host = await NavigateFromView(from, e.Parameters);
-            await NavigateToView(host, e.To, e.Parameters);
-        }
-
         private async Task<INavigationHost> NavigateFromView(INavigationAware viewModel, NavigationParameters parameters)
         {
-            viewModel.NavigateTo -= ViewModel_NavigateTo;
-            viewModel.GoBack -= ViewModel_GoBack;
-            viewModel.EndNavigation -= ViewModel_EndNavigation;
             await viewModel.OnNavigateFrom(parameters).ConfigureAwait(false);
             var host = _currentViewModel[viewModel];
             _currentViewModel.Remove(viewModel);
@@ -95,34 +118,11 @@ namespace WpfMvvmToolkit.Navigation
 
         private async Task NavigateToView(INavigationHost host, INavigationAware viewModel, NavigationParameters parameters)
         {
-            viewModel.NavigateTo += ViewModel_NavigateTo;
-            viewModel.GoBack += ViewModel_GoBack;
-            viewModel.EndNavigation += ViewModel_EndNavigation;
             await viewModel.OnNavigateTo(parameters).ConfigureAwait(false);
             _viewModels[host].Add(viewModel);
             _currentViewModel.Add(viewModel, host);
             host.DisplayedViewModel = viewModel;
         }
 
-        private async void ViewModel_EndNavigation(object? sender, NavigationParametersEventArgs e)
-        {
-            if (sender is not INavigationAware from)
-            {
-                throw new Exception($"The sender is not {nameof(INavigationAware)}.");
-            }
-
-            if (!_currentViewModel.ContainsKey(from))
-            {
-                throw new Exception($"The view is not the current view");
-            }
-
-            if (!from.CanNavigate(e.Parameters))
-            {
-                return;
-            }
-
-            var host = await NavigateFromView(from, e.Parameters);
-            End(host, e.Parameters);
-        }
     }
 }
