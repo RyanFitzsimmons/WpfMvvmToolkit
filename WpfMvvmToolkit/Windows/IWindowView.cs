@@ -10,7 +10,8 @@ namespace WpfMvvmToolkit.Windows
         event RoutedEventHandler Unloaded;
         event CancelEventHandler Closing;
         event EventHandler Closed;
-        IWindowResult? Result { get; set; }
+        Window Owner { get; set; }
+        WindowResult? Result { get; set; }
         object DataContext { get; set; }
         void Show();
         bool? ShowDialog();

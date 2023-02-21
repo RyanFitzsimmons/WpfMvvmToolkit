@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using WpfMvvmToolkit.Windows;
 
@@ -11,7 +12,7 @@ namespace WpfMvvmToolkit.Configuration
         private readonly Dictionary<Type, WindowRegistration> _viewRegistrationLookup = new();
         private readonly Dictionary<Type, WindowRegistration> _viewModelRegistrationLookup = new();
         private readonly Dictionary<IWindowViewModel, IWindowView> _activeWindows = new();
-        private readonly Dictionary<IWindowViewModel, Action<IWindowResult>?> _callbacks = new();
+        private readonly Dictionary<IWindowViewModel, Action<WindowResult>?> _callbacks = new();
         private readonly IServiceContainer _serviceContainer;
 
         public WindowRegistry(IServiceContainer serviceContainer)
@@ -41,7 +42,12 @@ namespace WpfMvvmToolkit.Configuration
             _viewModelRegistrationLookup.Add(viewModel, windowRegistration);
         }
 
-        public IWindowView Get<TWindowViewModel>(NavigationParameters parameters, Action<IWindowResult>? callback = null)
+        public IEnumerable<TViewModel> GetExistingViewModels<TViewModel>()
+        {
+            return _activeWindows.Keys.Where(x => x is TViewModel).Cast<TViewModel>();
+        }
+
+        public IWindowView Get<TWindowViewModel>(NavigationParameters parameters, Action<WindowResult>? callback = null, IWindowViewModel? owner = null)
             where TWindowViewModel : IWindowViewModel
         {
             if (!_viewModelRegistrationLookup.ContainsKey(typeof(TWindowViewModel)))
@@ -56,6 +62,12 @@ namespace WpfMvvmToolkit.Configuration
             viewModel.Close += ViewModel_Close;
 
             var view = (IWindowView)_serviceContainer.Get(registration.ViewType);
+
+            if (owner != null && _activeWindows.ContainsKey(owner))
+            {
+                view.Owner = (Window)_activeWindows[owner];
+            }
+
             view.DataContext = viewModel;
             view.Loaded += View_Loaded;
             view.Unloaded += View_Unloaded;
@@ -138,7 +150,7 @@ namespace WpfMvvmToolkit.Configuration
             _activeWindows.Remove(viewModel);
         }
 
-        private void ViewModel_Close(IWindowResult result)
+        private void ViewModel_Close(WindowResult result)
         {
             var window = _activeWindows[result.ViewModel];
             window.Result = result;

@@ -1,6 +1,6 @@
 ﻿namespace WpfMvvmToolkit.Windows
 {
-    public class WindowResult : IWindowResult
+    public class WindowResult 
     {
         public WindowResult(IWindowViewModel viewModel)
         {
