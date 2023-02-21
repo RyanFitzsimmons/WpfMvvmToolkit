@@ -20,6 +20,11 @@ namespace WpfMvvmToolkit.Configuration
             _serviceContainer = serviceContainer;
         }
 
+        internal IEnumerable<Window> GetWindows(IWindowViewModel viewModel)
+        {
+            return _activeWindows.Where(x => x.Key == viewModel).Select(x => x.Value).Cast<Window>();
+        }
+
         public void Register<TWindowView, TWindowViewModel>(ScopeType scope)
             where TWindowView : Window, IWindowView
             where TWindowViewModel : IWindowViewModel

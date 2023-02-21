@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
 using WpfMvvmToolkit.Windows;
 
 namespace WpfMvvmToolkit.Configuration
@@ -11,6 +12,16 @@ namespace WpfMvvmToolkit.Configuration
         public WindowFactory(IWindowRegistry viewRegistry)
         {
             _windowRegistry = viewRegistry;
+        }
+
+        internal IEnumerable<Window> GetWindows(IWindowViewModel viewModel)
+        {
+            if (_windowRegistry is not WindowRegistry wr)
+            {
+                throw new NotSupportedException();
+            }
+
+            return wr.GetWindows(viewModel);
         }
 
         public IEnumerable<TViewModel> Get<TViewModel>()
