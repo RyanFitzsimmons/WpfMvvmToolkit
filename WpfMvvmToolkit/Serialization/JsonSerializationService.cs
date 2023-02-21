@@ -34,7 +34,7 @@ namespace WpfMvvmToolkit.Serialization
             }
             finally
             {
-                UnlockFile();
+                UnlockFile(filePath);
             }
         }
 
@@ -62,7 +62,7 @@ namespace WpfMvvmToolkit.Serialization
             }
             finally
             {
-                UnlockFile();
+                UnlockFile(filePath);
             }
         }
 
@@ -94,9 +94,22 @@ namespace WpfMvvmToolkit.Serialization
             }
         }
 
-        private void UnlockFile()
+        private void UnlockFile(string filePath)
         {
             _lockStream?.Close();
+            DeleteLockFile(filePath);
+        }
+
+        private void DeleteLockFile(string filePath)
+        {
+            try
+            {
+                File.Delete(filePath + ".lock");
+            }
+            catch
+            {
+
+            }
         }
     }
 }
