@@ -8,5 +8,6 @@ namespace WpfMvvmToolkit.Navigation
         Task Navigate(INavigationAware from, INavigationAware to, NavigationParameters? parameters = null);
         Task NavigateBack(INavigationAware from, NavigationParameters? parameters = null);
         Task EndNavigation(INavigationAware from, NavigationParameters? parameters = null);
+        Task EndNavigation(INavigationHost host);
     }
 }
