@@ -101,6 +101,33 @@ namespace WpfMvvmToolkit.Navigation
             End(host, parameters);
         }
 
+        public async Task EndNavigation(INavigationHost host)
+        {
+            var viewModel = GetCurrentViewModel(host);
+
+            if (viewModel == null)
+            {
+                throw new KeyNotFoundException($"There are no active view models for this host.");
+            }
+
+            await EndNavigation(viewModel);
+        }
+
+        private INavigationAware? GetCurrentViewModel(INavigationHost host)
+        {
+            foreach (var viewModel in _viewModels[host])
+            {
+                if (!_currentViewModel.ContainsKey(viewModel))
+                {
+                    continue;
+                }
+
+                return viewModel;
+            }
+
+            return null;
+        }
+
         private void End(INavigationHost host, NavigationParameters parameters)
         {
             _viewModels.Remove(host);
