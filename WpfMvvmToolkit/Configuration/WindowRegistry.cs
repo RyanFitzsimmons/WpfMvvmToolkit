@@ -100,7 +100,7 @@ namespace WpfMvvmToolkit.Configuration
             await viewModel.Load();
         }
 
-        private void View_Unloaded(object sender, RoutedEventArgs e)
+        private async void View_Unloaded(object sender, RoutedEventArgs e)
         {
             if (sender is not Window window)
             {
@@ -112,7 +112,7 @@ namespace WpfMvvmToolkit.Configuration
                 throw new Exception($"The data context is not a window view model");
             }
 
-            viewModel.Unload();
+            await viewModel.Unload();
         }
 
         private void View_Closing(object? sender, CancelEventArgs e)

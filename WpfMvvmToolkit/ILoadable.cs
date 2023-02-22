@@ -5,6 +5,6 @@ namespace WpfMvvmToolkit
     public interface ILoadable
     {
         Task Load();
-        void Unload();
+        Task Unload();
     }
 }
