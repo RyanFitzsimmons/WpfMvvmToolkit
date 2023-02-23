@@ -7,10 +7,11 @@ namespace WpfMvvmToolkit.Navigation
 {
     public class NavigationService : INavigationService
     {
+        private readonly Dictionary<INavigationHost, bool> _keepHistoryLookup = new();
         private readonly Dictionary<INavigationHost, List<INavigationAware>> _viewModels = new();
         private readonly Dictionary<INavigationAware, INavigationHost> _currentViewModel = new();
 
-        public async Task StartNavigation(INavigationHost host, INavigationAware viewModel, NavigationParameters? parameters = null)
+        public async Task StartNavigation(INavigationHost host, INavigationAware viewModel, NavigationParameters? parameters = null, bool keepHistory = true)
         {
             if (_viewModels.ContainsKey(host))
             {
@@ -22,6 +23,7 @@ namespace WpfMvvmToolkit.Navigation
                 parameters = new();
             }
 
+            _keepHistoryLookup.Add(host, keepHistory);
             _viewModels.Add(host, new());
             await NavigateToView(host, viewModel, parameters);
         }
@@ -65,6 +67,11 @@ namespace WpfMvvmToolkit.Navigation
             }
 
             var host = await NavigateFromView(from, parameters);
+
+            if (!_keepHistoryLookup[host])
+            {
+                throw new Exception("NavigateBack cannot be used when no history is kept");
+            }
 
             var viewCount = _viewModels[host].Count;
             if (viewCount < 2)
@@ -130,6 +137,7 @@ namespace WpfMvvmToolkit.Navigation
 
         private void End(INavigationHost host, NavigationParameters parameters)
         {
+            _keepHistoryLookup.Remove(host);
             _viewModels.Remove(host);
             host.DisplayedViewModel = null;
             host.OnNavigationEnded(parameters);
@@ -146,7 +154,12 @@ namespace WpfMvvmToolkit.Navigation
         private async Task NavigateToView(INavigationHost host, INavigationAware viewModel, NavigationParameters parameters)
         {
             await viewModel.OnNavigateTo(parameters).ConfigureAwait(false);
-            _viewModels[host].Add(viewModel);
+
+            if (_keepHistoryLookup[host])
+            {
+                _viewModels[host].Add(viewModel);
+            }
+
             _currentViewModel.Add(viewModel, host);
             host.DisplayedViewModel = viewModel;
         }

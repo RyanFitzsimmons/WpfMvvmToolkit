@@ -4,7 +4,7 @@ namespace WpfMvvmToolkit.Navigation
 {
     public interface INavigationService
     {
-        Task StartNavigation(INavigationHost host, INavigationAware viewModel, NavigationParameters? parameters = null);
+        Task StartNavigation(INavigationHost host, INavigationAware viewModel, NavigationParameters? parameters = null, bool keepHistory = true);
         Task Navigate(INavigationAware from, INavigationAware to, NavigationParameters? parameters = null);
         Task NavigateBack(INavigationAware from, NavigationParameters? parameters = null);
         Task EndNavigation(INavigationAware from, NavigationParameters? parameters = null);

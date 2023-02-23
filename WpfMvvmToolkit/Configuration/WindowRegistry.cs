@@ -130,7 +130,7 @@ namespace WpfMvvmToolkit.Configuration
             viewModel.OnClosing(e);
         }
 
-        private void View_Closed(object? sender, EventArgs e)
+        private async void View_Closed(object? sender, EventArgs e)
         {
             if (sender is not IWindowView window)
             {
@@ -147,7 +147,7 @@ namespace WpfMvvmToolkit.Configuration
             window.Closing -= View_Closing;
             window.Closed -= View_Closed;
 
-            viewModel.OnClose();
+            await viewModel.OnClose();
             _callbacks[viewModel]?.Invoke(window.Result ?? new WindowResult(viewModel, new(), ""));
 
             viewModel.Close -= ViewModel_Close;

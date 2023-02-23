@@ -11,5 +11,6 @@ namespace WpfMvvmToolkit.Configuration
         void RegisterToSelf<T1>(ScopeType scope);
         void RegisterToSelf(Type type, ScopeType scope);
         void RegisterConstant<T1>(T1 constant);
+        void Register<T1>(Func<T1> factoryDelegate);
     }
 }
