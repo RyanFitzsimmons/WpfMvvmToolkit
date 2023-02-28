@@ -7,9 +7,11 @@ namespace WpfMvvmToolkit.Configuration
 {
     public interface IWindowRegistry
     {
+        Window? GetMainWindow();
+
         IEnumerable<TViewModel> GetExistingViewModels<TViewModel>();
 
-        IWindowView Get<TWindowViewModel>(NavigationParameters parameters, Action<WindowResult>? callback = null, IWindowViewModel? owner = null) where TWindowViewModel : IWindowViewModel;
+        IWindowView Get<TWindowViewModel>(NavigationParameters parameters, Action<WindowResult>? callback = null, IWindowViewModel? owner = null, bool isMainWindow = false) where TWindowViewModel : IWindowViewModel;
 
         void Register<TWindowView, TWindowViewModel>(ScopeType scope)
             where TWindowView : Window, IWindowView

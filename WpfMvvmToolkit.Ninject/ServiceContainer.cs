@@ -66,5 +66,10 @@ namespace WpfMvvmToolkit.Ninject
         {
             _kernel.Bind<T1>().ToConstant(constant);
         }
+
+        public void Register<T1>(Func<T1> factoryDelegate)
+        {
+            _kernel.Bind<T1>().ToMethod<T1>((context) => factoryDelegate());
+        }
     }
 }

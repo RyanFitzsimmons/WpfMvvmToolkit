@@ -8,6 +8,7 @@ namespace WpfMvvmToolkit
 {
     public class ObservableObject : INotifyPropertyChanged, INotifyPropertyChanging
     {
+        private readonly Dictionary<string, List<Action>> _propertyChangingDelegates = new();
         private readonly Dictionary<string, List<Action>> _propertyChangedDelegates = new();
         private bool _hasChanged;
 
@@ -15,13 +16,13 @@ namespace WpfMvvmToolkit
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public bool IsPropertyChangeMonitoringEnabled { get; set; } = true;
-        public bool HasChanged
+        public virtual bool HasChanged
         {
             get => _hasChanged;
             set => SetProperty(ref _hasChanged, value);
         }
 
-        protected bool SetProperty<T>([NotNullIfNotNull(nameof(newValue))] ref T field, T newValue, [CallerMemberName] string? propertyName = null)
+        protected virtual bool SetProperty<T>([NotNullIfNotNull(nameof(newValue))] ref T field, T newValue, [CallerMemberName] string? propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(field, newValue))
             {
@@ -29,10 +30,29 @@ namespace WpfMvvmToolkit
             }
 
             OnPropertyChanging(propertyName);
+            InvokePropertyChangingDelegates(propertyName);
             field = newValue;
             OnPropertyChanged(propertyName);
             InvokePropertyChangedDelegates(propertyName);
             return true;
+        }
+
+        private void InvokePropertyChangingDelegates(string? propertyName)
+        {
+            if (propertyName == null)
+            {
+                return;
+            }
+
+            if (!_propertyChangingDelegates.ContainsKey(propertyName))
+            {
+                return;
+            }
+
+            foreach (var propertyChangingDelegate in _propertyChangingDelegates[propertyName])
+            {
+                propertyChangingDelegate();
+            }
         }
 
         private void InvokePropertyChangedDelegates(string? propertyName)
@@ -53,7 +73,22 @@ namespace WpfMvvmToolkit
             }
         }
 
-        public void AddPropertyChangedDeletegate(string propertyName, Action propertyChangeDelegate)
+        public virtual void AddPropertyChangingDeletegate(string propertyName, Action propertyChangingDelegate)
+        {
+            if (!_propertyChangingDelegates.ContainsKey(propertyName))
+            {
+                _propertyChangingDelegates.Add(propertyName, new());
+            }
+
+            _propertyChangingDelegates[propertyName].Add(propertyChangingDelegate);
+        }
+
+        public virtual void RemoveAllPropertyChangingDelegates()
+        {
+            _propertyChangingDelegates.Clear();
+        }
+
+        public virtual void AddPropertyChangedDeletegate(string propertyName, Action propertyChangeDelegate)
         {
             if (!_propertyChangedDelegates.ContainsKey(propertyName))
             {
@@ -63,7 +98,7 @@ namespace WpfMvvmToolkit
             _propertyChangedDelegates[propertyName].Add(propertyChangeDelegate);
         }
 
-        public void RemoveAllPropertyChangedDelegates()
+        public virtual void RemoveAllPropertyChangedDelegates()
         {
             _propertyChangedDelegates.Clear();
         }

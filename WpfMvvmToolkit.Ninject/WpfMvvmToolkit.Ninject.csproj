@@ -17,7 +17,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Ninject" Version="3.3.6" />
-		<PackageReference Include="WpfMvvmToolkit" Version="1.0.1" />
+		<PackageReference Include="WpfMvvmToolkit" Version="1.0.4" />
 	</ItemGroup>
 
 </Project>

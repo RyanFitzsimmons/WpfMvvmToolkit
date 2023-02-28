@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Forms;
 using WpfMvvmToolkit.Windows;
 
 namespace WpfMvvmToolkit.Configuration
@@ -14,10 +15,16 @@ namespace WpfMvvmToolkit.Configuration
         private readonly Dictionary<IWindowViewModel, IWindowView> _activeWindows = new();
         private readonly Dictionary<IWindowViewModel, Action<WindowResult>?> _callbacks = new();
         private readonly IServiceContainer _serviceContainer;
+        private Window? _mainWindow;
 
         public WindowRegistry(IServiceContainer serviceContainer)
         {
             _serviceContainer = serviceContainer;
+        }
+
+        public Window? GetMainWindow()
+        {
+            return _mainWindow;
         }
 
         internal IEnumerable<Window> GetWindows(IWindowViewModel viewModel)
@@ -52,7 +59,7 @@ namespace WpfMvvmToolkit.Configuration
             return _activeWindows.Keys.Where(x => x is TViewModel).Cast<TViewModel>();
         }
 
-        public IWindowView Get<TWindowViewModel>(NavigationParameters parameters, Action<WindowResult>? callback = null, IWindowViewModel? owner = null)
+        public IWindowView Get<TWindowViewModel>(NavigationParameters parameters, Action<WindowResult>? callback = null, IWindowViewModel? owner = null, bool isMainWindow = false)
             where TWindowViewModel : IWindowViewModel
         {
             if (!_viewModelRegistrationLookup.ContainsKey(typeof(TWindowViewModel)))
@@ -67,6 +74,11 @@ namespace WpfMvvmToolkit.Configuration
             viewModel.Close += ViewModel_Close;
 
             var view = (IWindowView)_serviceContainer.Get(registration.ViewType);
+
+            if (isMainWindow)
+            {
+                _mainWindow = (Window)view;
+            }
 
             if (owner != null && _activeWindows.ContainsKey(owner))
             {
@@ -140,6 +152,11 @@ namespace WpfMvvmToolkit.Configuration
             if (window.DataContext is not IWindowViewModel viewModel)
             {
                 throw new Exception($"The data context is not a window view model");
+            }
+
+            if (window == _mainWindow)
+            {
+                _mainWindow = null;
             }
 
             window.Loaded -= View_Loaded;

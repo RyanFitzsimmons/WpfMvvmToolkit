@@ -20,7 +20,7 @@ public class WindowsDialogService : IWindowsDialogService
     {
         if (owner == null)
         {
-            return null;
+            return _windowFactory.GetMainWindow();
         }
 
         if (_windowFactory is not WindowFactory wf)

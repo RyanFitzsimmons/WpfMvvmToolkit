@@ -10,10 +10,10 @@
 		<Description>A collection of basic tools</Description>
 		<PackageProjectUrl>https://github.com/RyanFitzsimmons/WpfMvvmToolkit</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/RyanFitzsimmons/WpfMvvmToolkit</RepositoryUrl>
-		<PackageTags>WPF MVVM Simple Basic Configuration Commands</PackageTags>
+		<PackageTags>WPF MVVM Simple Basic Configuration Commands DI</PackageTags>
 		<PackageReleaseNotes>The first release</PackageReleaseNotes>
 		<Authors>Ryan Fitzsimmons</Authors>
-		<Version>1.0.3</Version>
+		<Version>1.0.4</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

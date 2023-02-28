@@ -66,7 +66,7 @@ namespace WpfMvvmToolkit.Serialization
             }
         }
 
-        private JsonSerializerOptions GetDefaultOptions()
+        public JsonSerializerOptions GetDefaultOptions()
         {
             return new JsonSerializerOptions
             {

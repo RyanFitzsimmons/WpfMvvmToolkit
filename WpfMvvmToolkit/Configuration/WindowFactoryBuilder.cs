@@ -19,11 +19,12 @@ namespace WpfMvvmToolkit.Configuration
     {
         private readonly List<Action<IServiceContainer>> _configureDelegates = new();
         private readonly List<Action<IWindowRegistry>> _registerDelegates = new();
-        private readonly List<Assembly> _serviceAssemblies = new();
+        private readonly List<ServiceAssemblyInfo> _serviceAssemblies = new();
         private readonly List<Assembly> _viewModelsAssemblies = new();
         private readonly List<Assembly> _windowAssemblies = new();
         private Func<Type, Type, ScopeType>? _onRegisterSetScope;
         private Func<Type, Type, bool>? _onRegisterIgnore;
+        private Action<List<Type>>? _instantiateOnBuildTypesDelegate;
 
         public WindowFactoryBuilder ConfigureServices(Action<IServiceContainer> configureDelegate)
         {
@@ -34,6 +35,12 @@ namespace WpfMvvmToolkit.Configuration
         public WindowFactoryBuilder RegisterWindows(Action<IWindowRegistry> registerDelegate)
         {
             _registerDelegates.Add(registerDelegate);
+            return this;
+        }
+
+        public WindowFactoryBuilder InstantiateOnBuild(Action<List<Type>> instantiateOnBuildTypesDelegate)
+        {
+            _instantiateOnBuildTypesDelegate = instantiateOnBuildTypesDelegate;
             return this;
         }
 
@@ -68,7 +75,19 @@ namespace WpfMvvmToolkit.Configuration
             }
 
             serviceContainer.Register<IWindowFactory, WindowFactory>(ScopeType.Singleton);
+            AutoInstantiate(serviceContainer);
+
             return serviceContainer.Get<IWindowFactory>();
+        }
+
+        private void AutoInstantiate(IServiceContainer serviceContainer)
+        {
+            List<Type> typesToInstantiate = new();
+            _instantiateOnBuildTypesDelegate?.Invoke(typesToInstantiate);
+            foreach (var type in typesToInstantiate)
+            {
+                _ = serviceContainer.Get(type);
+            }
         }
 
         protected abstract IServiceContainer GetServiceContainer();
@@ -79,9 +98,14 @@ namespace WpfMvvmToolkit.Configuration
             return this;
         }
 
-        public WindowFactoryBuilder AddServiceAssembly(Assembly assembly)
+        public WindowFactoryBuilder AddServiceAssembly(Assembly assembly, string endingWith = "Service")
         {
-            _serviceAssemblies.Add(assembly);
+            if (string.IsNullOrWhiteSpace(endingWith))
+            {
+                throw new Exception("Ending with must contain a value");
+            }
+
+            _serviceAssemblies.Add(new(assembly, endingWith));
             return this;
         }
 
@@ -104,9 +128,9 @@ namespace WpfMvvmToolkit.Configuration
 
         private void RegisterServicesFromAssemblies(IServiceContainer serviceContainer)
         {
-            foreach (var assembly in _serviceAssemblies)
+            foreach (var assemblyInfo in _serviceAssemblies)
             {
-                foreach (var service in GetServicesFrom(assembly))
+                foreach (var service in GetServicesFrom(assemblyInfo.Assembly, assemblyInfo.EndingWith))
                 {
                     Register(serviceContainer, service.Interface, service.Implementation);
                 }
@@ -138,6 +162,13 @@ namespace WpfMvvmToolkit.Configuration
                     continue;
                 }
 
+                var ignore = _onRegisterIgnore?.Invoke(i, c) ?? false;
+
+                if (ignore)
+                {
+                    continue;
+                }
+
                 if (!i.IsAssignableFrom(c))
                 {
                     throw new IncompatibleTypeRegistrationException(i, c);
@@ -147,16 +178,23 @@ namespace WpfMvvmToolkit.Configuration
             }
         }
 
-        private IEnumerable<(Type Interface, Type Implementation)> GetServicesFrom(Assembly assembly)
+        private IEnumerable<(Type Interface, Type Implementation)> GetServicesFrom(Assembly assembly, string endingWith)
         {
             var allTypes = assembly.GetTypes();
-            var classes = allTypes.Where(x => x.IsClass && !x.IsAbstract && x.Name.EndsWith("Service"));
+            var classes = allTypes.Where(x => x.IsClass && !x.IsAbstract && x.Name.EndsWith(endingWith));
 
             foreach (var c in classes)
             {
                 var i = allTypes.SingleOrDefault(x => x.IsInterface && x.Name == $"I{c.Name}");
 
                 if (i == null)
+                {
+                    continue;
+                }
+
+                var ignore = _onRegisterIgnore?.Invoke(i, c) ?? false;
+
+                if (ignore)
                 {
                     continue;
                 }
@@ -226,5 +264,17 @@ namespace WpfMvvmToolkit.Configuration
             windowRegistry.Register(view, viewModel, scope);
         }
 
+
+        private class ServiceAssemblyInfo
+        {
+            public ServiceAssemblyInfo(Assembly assembly, string endingWith)
+            {
+                Assembly = assembly;
+                EndingWith = endingWith;
+            }
+
+            public Assembly Assembly { get; }
+            public string EndingWith { get; }
+        }
     }
 }

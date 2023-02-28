@@ -14,6 +14,11 @@ namespace WpfMvvmToolkit.Configuration
             _windowRegistry = viewRegistry;
         }
 
+        public Window? GetMainWindow()
+        {
+            return _windowRegistry.GetMainWindow();
+        }
+
         internal IEnumerable<Window> GetWindows(IWindowViewModel viewModel)
         {
             if (_windowRegistry is not WindowRegistry wr)
@@ -29,25 +34,25 @@ namespace WpfMvvmToolkit.Configuration
             return _windowRegistry.GetExistingViewModels<TViewModel>();
         }
 
-        public void Show<TWindowViewModel>(NavigationParameters? parameters = null, Action<WindowResult>? callback = null, IWindowViewModel? owner = null) where TWindowViewModel : class, IWindowViewModel
+        public void Show<TWindowViewModel>(NavigationParameters? parameters = null, Action<WindowResult>? callback = null, IWindowViewModel? owner = null, bool isMainWindow = false) where TWindowViewModel : class, IWindowViewModel
         {
             if (parameters == null)
             {
                 parameters = new();
             }
 
-            var view = _windowRegistry.Get<TWindowViewModel>(parameters, callback, owner);
+            var view = _windowRegistry.Get<TWindowViewModel>(parameters, callback, owner, isMainWindow);
             view.Show();
         }
 
-        public bool? ShowDialog<TWindowViewModel>(NavigationParameters? parameters = null, Action<WindowResult>? callback = null, IWindowViewModel? owner = null) where TWindowViewModel : class, IWindowViewModel
+        public bool? ShowDialog<TWindowViewModel>(NavigationParameters? parameters = null, Action<WindowResult>? callback = null, IWindowViewModel? owner = null, bool isMainWindow = false) where TWindowViewModel : class, IWindowViewModel
         {
             if (parameters == null)
             {
                 parameters = new();
             }
 
-            var view = _windowRegistry.Get<TWindowViewModel>(parameters, callback, owner);
+            var view = _windowRegistry.Get<TWindowViewModel>(parameters, callback, owner, isMainWindow);
             return view.ShowDialog();
         }
     }
