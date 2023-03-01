@@ -10,6 +10,7 @@ namespace WpfMvvmToolkit
     {
         private readonly Dictionary<string, List<Action>> _propertyChangingDelegates = new();
         private readonly Dictionary<string, List<Action>> _propertyChangedDelegates = new();
+        private readonly List<string> _ignoredPropertyNames = new();
         private bool _hasChanged;
 
         public event PropertyChangingEventHandler? PropertyChanging;
@@ -112,11 +113,20 @@ namespace WpfMvvmToolkit
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-            if (propertyName != nameof(HasChanged) && IsPropertyChangeMonitoringEnabled)
+            if (propertyName == null)
+            {
+                return;
+            }
+
+            if (propertyName != nameof(HasChanged) && IsPropertyChangeMonitoringEnabled && !_ignoredPropertyNames.Contains(propertyName))
             {
                 HasChanged = true;
             }
         }
 
+        protected void IgnorePropertyMonitoringFor(string propertyName)
+        {
+            _ignoredPropertyNames.Add(propertyName);
+        }
     }
 }
