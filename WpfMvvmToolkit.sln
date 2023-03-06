@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfMvvmToolkit.Ninject", "W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfMvvmToolkit.Serilog", "WpfMvvmToolkit.Serilog\WpfMvvmToolkit.Serilog.csproj", "{82B2A0AC-046A-47D7-B13E-1C9E2666D397}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfMvvmToolkit.UnitTests", "WpfMvvmToolkit.UnitTests\WpfMvvmToolkit.UnitTests.csproj", "{B1D481E0-0E65-4A3B-8D88-A504D1496B93}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{82B2A0AC-046A-47D7-B13E-1C9E2666D397}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82B2A0AC-046A-47D7-B13E-1C9E2666D397}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82B2A0AC-046A-47D7-B13E-1C9E2666D397}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1D481E0-0E65-4A3B-8D88-A504D1496B93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1D481E0-0E65-4A3B-8D88-A504D1496B93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1D481E0-0E65-4A3B-8D88-A504D1496B93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1D481E0-0E65-4A3B-8D88-A504D1496B93}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

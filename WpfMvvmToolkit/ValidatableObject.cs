@@ -12,7 +12,13 @@ namespace WpfMvvmToolkit
     public class ValidatableObject : ObservableObject, INotifyDataErrorInfo
     {
         private readonly Dictionary<string, List<string>> _propertyErrors = new();
-        public bool HasErrors => _propertyErrors.Any(x => x.Value.Count > 0);
+        private bool _hasErrors;
+
+        public bool HasErrors
+        {
+            get => _hasErrors;
+            set => SetProperty(ref _hasErrors, value);
+        }
 
         public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
 
@@ -55,6 +61,14 @@ namespace WpfMvvmToolkit
             _propertyErrors[propertyName].Clear();
             _propertyErrors[propertyName].AddRange(messages);
             OnPropertyErrorsChanged(propertyName);
+
+            if (_propertyErrors.Any(x => x.Value.Count > 0))
+            {
+                HasErrors = true;
+                return;
+            }
+
+            HasErrors = false;
         }
 
         /// <summary>

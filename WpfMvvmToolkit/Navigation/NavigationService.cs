@@ -120,6 +120,24 @@ namespace WpfMvvmToolkit.Navigation
             await EndNavigation(viewModel);
         }
 
+        public bool CanClose(INavigationHost host)
+        {
+            /// This can happen if the navigation has ended before the window is closed.
+            if (!_viewModels.ContainsKey(host))
+            {
+                return true;
+            }
+
+            var currentViewModel = GetCurrentViewModel(host);
+
+            if (currentViewModel == null)
+            {
+                return true;
+            }
+
+            return currentViewModel.CanNavigate(new());
+        }
+
         private INavigationAware? GetCurrentViewModel(INavigationHost host)
         {
             foreach (var viewModel in _viewModels[host])
