@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Forms;
 using WpfMvvmToolkit.Windows;
 
 namespace WpfMvvmToolkit.Configuration
@@ -83,6 +82,11 @@ namespace WpfMvvmToolkit.Configuration
             if (owner != null && _activeWindows.ContainsKey(owner))
             {
                 view.Owner = (Window)_activeWindows[owner];
+            }
+
+            if (owner == null && !isMainWindow && _mainWindow != null)
+            {
+                view.Owner = _mainWindow;
             }
 
             view.DataContext = viewModel;
