@@ -82,5 +82,13 @@ namespace WpfMvvmToolkit
                 yield return $"The file already exists {file.FullName}";
             }
         }
+
+        public static IEnumerable<string> Object(object? obj, bool canBeNull = false)
+        {
+            if (obj == null && !canBeNull)
+            {
+                yield return "The value cannot be null";
+            }
+        }
     }
 }

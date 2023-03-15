@@ -11,6 +11,11 @@ namespace WpfMvvmToolkit.Navigation
         private readonly Dictionary<INavigationHost, List<INavigationAware>> _viewModels = new();
         private readonly Dictionary<INavigationAware, INavigationHost> _currentViewModel = new();
 
+        public bool GetHostExists(INavigationHost host)
+        {
+            return _viewModels.ContainsKey(host);
+        }
+
         public async Task StartNavigation(INavigationHost host, INavigationAware viewModel, NavigationParameters? parameters = null, bool keepHistory = true)
         {
             if (_viewModels.ContainsKey(host))
@@ -87,7 +92,7 @@ namespace WpfMvvmToolkit.Navigation
             await NavigateToView(host, to, parameters);
         }
 
-        public async Task EndNavigation(INavigationAware from, NavigationParameters? parameters = null)
+        public async Task EndNavigation(INavigationAware from, NavigationParameters? parameters = null, bool force = false)
         {
             if (!_currentViewModel.ContainsKey(from))
             {
@@ -99,7 +104,7 @@ namespace WpfMvvmToolkit.Navigation
                 parameters = new();
             }
 
-            if (!from.CanNavigate(parameters))
+            if (!force && !from.CanNavigate(parameters))
             {
                 return;
             }
@@ -117,7 +122,7 @@ namespace WpfMvvmToolkit.Navigation
                 throw new KeyNotFoundException($"There are no active view models for this host.");
             }
 
-            await EndNavigation(viewModel);
+            await EndNavigation(viewModel, force: true);
         }
 
         public bool CanClose(INavigationHost host)

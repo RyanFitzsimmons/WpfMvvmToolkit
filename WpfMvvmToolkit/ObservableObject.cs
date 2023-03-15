@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace WpfMvvmToolkit
@@ -127,6 +129,24 @@ namespace WpfMvvmToolkit
         protected void IgnorePropertyMonitoringFor(string propertyName)
         {
             _ignoredPropertyNames.Add(propertyName);
+        }
+
+        /// <summary>
+        /// Forces SetProperty on all properties
+        /// </summary>
+        public void SetAllProperties()
+        {
+            var hasChanged = HasChanged;
+
+            foreach (var property in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty | BindingFlags.SetProperty))
+            {
+                if (property.CanWrite)
+                {
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property.Name));
+                }
+            }
+
+            HasChanged = hasChanged;
         }
     }
 }
