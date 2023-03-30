@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -113,10 +112,9 @@ namespace WpfMvvmToolkit
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
             if (propertyName == null)
             {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
                 return;
             }
 
@@ -124,6 +122,8 @@ namespace WpfMvvmToolkit
             {
                 HasChanged = true;
             }
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         protected void IgnorePropertyMonitoringFor(string propertyName)

@@ -60,15 +60,16 @@ namespace WpfMvvmToolkit
 
             _propertyErrors[propertyName].Clear();
             _propertyErrors[propertyName].AddRange(messages);
-            OnPropertyErrorsChanged(propertyName);
 
             if (_propertyErrors.Any(x => x.Value.Count > 0))
             {
                 HasErrors = true;
+                OnPropertyErrorsChanged(propertyName);
                 return;
             }
 
             HasErrors = false;
+            OnPropertyErrorsChanged(propertyName);
         }
 
         /// <summary>
