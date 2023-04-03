@@ -176,8 +176,6 @@ namespace WpfMvvmToolkit.Navigation
 
         private async Task NavigateToView(INavigationHost host, INavigationAware viewModel, NavigationParameters parameters)
         {
-            await viewModel.OnNavigateTo(parameters).ConfigureAwait(false);
-
             if (_keepHistoryLookup[host])
             {
                 _viewModels[host].Add(viewModel);
@@ -185,6 +183,8 @@ namespace WpfMvvmToolkit.Navigation
 
             _currentViewModel.Add(viewModel, host);
             host.DisplayedViewModel = viewModel;
+
+            await viewModel.OnNavigateTo(parameters).ConfigureAwait(false);
         }
 
     }
