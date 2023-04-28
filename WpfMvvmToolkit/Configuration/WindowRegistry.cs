@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using WpfMvvmToolkit.Windows;
 
@@ -58,7 +59,7 @@ namespace WpfMvvmToolkit.Configuration
             return _activeWindows.Keys.Where(x => x is TViewModel).Cast<TViewModel>();
         }
 
-        public IWindowView Get<TWindowViewModel>(NavigationParameters parameters, Action<WindowResult>? callback = null, IWindowViewModel? owner = null, bool isMainWindow = false)
+        public async Task<IWindowView> Get<TWindowViewModel>(NavigationParameters parameters, Action<WindowResult>? callback = null, IWindowViewModel? owner = null, bool isMainWindow = false)
             where TWindowViewModel : IWindowViewModel
         {
             if (!_viewModelRegistrationLookup.ContainsKey(typeof(TWindowViewModel)))
@@ -69,7 +70,7 @@ namespace WpfMvvmToolkit.Configuration
             var registration = _viewModelRegistrationLookup[typeof(TWindowViewModel)];
 
             var viewModel = _serviceContainer.Get<TWindowViewModel>();
-            viewModel.OnOpen(parameters);
+            await viewModel.OnOpen(parameters).ConfigureAwait(false);
             viewModel.Close += ViewModel_Close;
 
             var view = (IWindowView)_serviceContainer.Get(registration.ViewType);
@@ -113,7 +114,7 @@ namespace WpfMvvmToolkit.Configuration
                 throw new Exception($"The data context is not a window view model");
             }
 
-            await viewModel.Load();
+            await viewModel.Load().ConfigureAwait(false);
         }
 
         private async void View_Unloaded(object sender, RoutedEventArgs e)
@@ -128,7 +129,7 @@ namespace WpfMvvmToolkit.Configuration
                 throw new Exception($"The data context is not a window view model");
             }
 
-            await viewModel.Unload();
+            await viewModel.Unload().ConfigureAwait(false);
         }
 
         private void View_Closing(object? sender, CancelEventArgs e)
@@ -168,7 +169,7 @@ namespace WpfMvvmToolkit.Configuration
             window.Closing -= View_Closing;
             window.Closed -= View_Closed;
 
-            await viewModel.OnClose();
+            await viewModel.OnClose().ConfigureAwait(false);
             _callbacks[viewModel]?.Invoke(window.Result ?? new WindowResult(viewModel, new(), ""));
 
             viewModel.Close -= ViewModel_Close;

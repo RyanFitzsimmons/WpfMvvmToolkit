@@ -30,7 +30,7 @@ namespace WpfMvvmToolkit.Navigation
 
             _keepHistoryLookup.Add(host, keepHistory);
             _viewModels.Add(host, new());
-            await NavigateToView(host, viewModel, parameters);
+            await NavigateToView(host, viewModel, parameters).ConfigureAwait(false);
         }
 
         public async Task Navigate(INavigationAware from, INavigationAware to, NavigationParameters? parameters = null)
@@ -50,8 +50,8 @@ namespace WpfMvvmToolkit.Navigation
                 return;
             }
 
-            var host = await NavigateFromView(from, parameters);
-            await NavigateToView(host, to, parameters);
+            var host = await NavigateFromView(from, parameters).ConfigureAwait(false);
+            await NavigateToView(host, to, parameters).ConfigureAwait(false);
         }
 
         public async Task NavigateBack(INavigationAware from, NavigationParameters? parameters = null)
@@ -71,7 +71,7 @@ namespace WpfMvvmToolkit.Navigation
                 return;
             }
 
-            var host = await NavigateFromView(from, parameters);
+            var host = await NavigateFromView(from, parameters).ConfigureAwait(false);
 
             if (!_keepHistoryLookup[host])
             {
@@ -89,7 +89,7 @@ namespace WpfMvvmToolkit.Navigation
             var to = _viewModels[host].Last();
 
             _viewModels[host].RemoveAt(_viewModels[host].Count - 1);
-            await NavigateToView(host, to, parameters);
+            await NavigateToView(host, to, parameters).ConfigureAwait(false);
         }
 
         public async Task EndNavigation(INavigationAware from, NavigationParameters? parameters = null, bool force = false)
@@ -109,7 +109,7 @@ namespace WpfMvvmToolkit.Navigation
                 return;
             }
 
-            var host = await NavigateFromView(from, parameters);
+            var host = await NavigateFromView(from, parameters).ConfigureAwait(false);
             End(host, parameters);
         }
 
@@ -122,7 +122,7 @@ namespace WpfMvvmToolkit.Navigation
                 throw new KeyNotFoundException($"There are no active view models for this host.");
             }
 
-            await EndNavigation(viewModel, force: true);
+            await EndNavigation(viewModel, force: true).ConfigureAwait(false);
         }
 
         public bool CanClose(INavigationHost host)

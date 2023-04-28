@@ -8,7 +8,7 @@ namespace WpfMvvmToolkit.Windows
     {
         string Title { get; }
         event Action<WindowResult>? Close;
-        void OnOpen(NavigationParameters parameters);
+        Task OnOpen(NavigationParameters parameters);
         void OnClosing(CancelEventArgs e);
         Task OnClose();
 
