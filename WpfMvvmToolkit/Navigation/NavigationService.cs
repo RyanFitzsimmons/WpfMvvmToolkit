@@ -81,7 +81,7 @@ namespace WpfMvvmToolkit.Navigation
             var viewCount = _viewModels[host].Count;
             if (viewCount < 2)
             {
-                End(host, parameters);
+                await End(host, parameters);
                 return;
             }
 
@@ -110,7 +110,7 @@ namespace WpfMvvmToolkit.Navigation
             }
 
             var host = await NavigateFromView(from, parameters).ConfigureAwait(false);
-            End(host, parameters);
+            await End(host, parameters);
         }
 
         public async Task EndNavigation(INavigationHost host)
@@ -158,12 +158,12 @@ namespace WpfMvvmToolkit.Navigation
             return null;
         }
 
-        private void End(INavigationHost host, NavigationParameters parameters)
+        private async Task End(INavigationHost host, NavigationParameters parameters)
         {
             _keepHistoryLookup.Remove(host);
             _viewModels.Remove(host);
             host.DisplayedViewModel = null;
-            host.OnNavigationEnded(parameters);
+            await host.OnNavigationEnded(parameters);
         }
 
         private async Task<INavigationHost> NavigateFromView(INavigationAware viewModel, NavigationParameters parameters)
@@ -183,7 +183,6 @@ namespace WpfMvvmToolkit.Navigation
 
             _currentViewModel.Add(viewModel, host);
             host.DisplayedViewModel = viewModel;
-
             await viewModel.OnNavigateTo(parameters).ConfigureAwait(false);
         }
 

@@ -13,7 +13,7 @@
 		<PackageTags>WPF MVVM Simple Basic Configuration Commands DI</PackageTags>
 		<PackageReleaseNotes>The first release</PackageReleaseNotes>
 		<Authors>Ryan Fitzsimmons</Authors>
-		<Version>1.0.9</Version>
+		<Version>1.0.10</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -1,8 +1,10 @@
-﻿namespace WpfMvvmToolkit.Navigation
+﻿using System.Threading.Tasks;
+
+namespace WpfMvvmToolkit.Navigation
 {
     public interface INavigationHost
     {
         INavigationAware? DisplayedViewModel { get; set; }
-        void OnNavigationEnded(NavigationParameters parameters);
+        Task OnNavigationEnded(NavigationParameters parameters);
     }
 }
