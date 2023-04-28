@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -16,7 +18,7 @@ namespace WpfMvvmToolkit.Serialization
                 options = GetDefaultOptions();
             }
 
-            await LockFile(filePath).ConfigureAwait(false);
+            await LockFile(filePath);
 
             try
             {
@@ -24,7 +26,7 @@ namespace WpfMvvmToolkit.Serialization
                     filePath,
                     JsonSerializer.Serialize(model, options),
                     Encoding.Default,
-                    token).ConfigureAwait(false);
+                    token);
             }
             catch (Exception)
             {
@@ -32,7 +34,7 @@ namespace WpfMvvmToolkit.Serialization
             }
             finally
             {
-                await UnlockFile(filePath).ConfigureAwait(false);
+                await UnlockFile(filePath);
             }
         }
 
@@ -48,13 +50,11 @@ namespace WpfMvvmToolkit.Serialization
                 options = GetDefaultOptions();
             }
 
-            await LockFile(filePath).ConfigureAwait(false);
+            await LockFile(filePath);
 
             try
             {
-                return JsonSerializer.Deserialize<T>(
-                    await File.ReadAllTextAsync(filePath, Encoding.Default, token).ConfigureAwait(false),
-                    options);
+                return JsonSerializer.Deserialize<T>(await File.ReadAllTextAsync(filePath, Encoding.Default, token), options);
             }
             catch (Exception)
             {
@@ -62,7 +62,7 @@ namespace WpfMvvmToolkit.Serialization
             }
             finally
             {
-                await UnlockFile(filePath).ConfigureAwait(false);
+                await UnlockFile(filePath);
             }
         }
 
@@ -89,7 +89,7 @@ namespace WpfMvvmToolkit.Serialization
                 }
                 catch (IOException)
                 {
-                    await Task.Delay(new TimeSpan(0, 0, 2)).ConfigureAwait(false);
+                    await Task.Delay(new TimeSpan(0, 0, 2));
                 }
             }
         }
@@ -101,7 +101,7 @@ namespace WpfMvvmToolkit.Serialization
                 return;
             }
 
-            await _lockStream.DisposeAsync().ConfigureAwait(false);
+            await _lockStream.DisposeAsync();
             DeleteLockFile(filePath);
         }
 

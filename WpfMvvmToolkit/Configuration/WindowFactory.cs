@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows;
 using WpfMvvmToolkit.Windows;
 
@@ -35,25 +34,25 @@ namespace WpfMvvmToolkit.Configuration
             return _windowRegistry.GetExistingViewModels<TViewModel>();
         }
 
-        public async Task Show<TWindowViewModel>(NavigationParameters? parameters = null, Action<WindowResult>? callback = null, IWindowViewModel? owner = null, bool isMainWindow = false) where TWindowViewModel : class, IWindowViewModel
+        public void Show<TWindowViewModel>(NavigationParameters? parameters = null, Action<WindowResult>? callback = null, IWindowViewModel? owner = null, bool isMainWindow = false) where TWindowViewModel : class, IWindowViewModel
         {
             if (parameters == null)
             {
                 parameters = new();
             }
 
-            var view = await _windowRegistry.Get<TWindowViewModel>(parameters, callback, owner, isMainWindow).ConfigureAwait(false);
+            var view = _windowRegistry.Get<TWindowViewModel>(parameters, callback, owner, isMainWindow);
             view.Show();
         }
 
-        public async Task<bool?> ShowDialog<TWindowViewModel>(NavigationParameters? parameters = null, Action<WindowResult>? callback = null, IWindowViewModel? owner = null, bool isMainWindow = false) where TWindowViewModel : class, IWindowViewModel
+        public bool? ShowDialog<TWindowViewModel>(NavigationParameters? parameters = null, Action<WindowResult>? callback = null, IWindowViewModel? owner = null, bool isMainWindow = false) where TWindowViewModel : class, IWindowViewModel
         {
             if (parameters == null)
             {
                 parameters = new();
             }
 
-            var view = await _windowRegistry.Get<TWindowViewModel>(parameters, callback, owner, isMainWindow).ConfigureAwait(false);
+            var view = _windowRegistry.Get<TWindowViewModel>(parameters, callback, owner, isMainWindow);
             return view.ShowDialog();
         }
     }
