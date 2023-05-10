@@ -36,22 +36,14 @@ namespace WpfMvvmToolkit.Configuration
 
         public void Show<TWindowViewModel>(NavigationParameters? parameters = null, Action<WindowResult>? callback = null, IWindowViewModel? owner = null, bool isMainWindow = false) where TWindowViewModel : class, IWindowViewModel
         {
-            if (parameters == null)
-            {
-                parameters = new();
-            }
-
+            parameters ??= new();
             var view = _windowRegistry.Get<TWindowViewModel>(parameters, callback, owner, isMainWindow);
             view.Show();
         }
 
         public bool? ShowDialog<TWindowViewModel>(NavigationParameters? parameters = null, Action<WindowResult>? callback = null, IWindowViewModel? owner = null, bool isMainWindow = false) where TWindowViewModel : class, IWindowViewModel
         {
-            if (parameters == null)
-            {
-                parameters = new();
-            }
-
+            parameters ??= new();
             var view = _windowRegistry.Get<TWindowViewModel>(parameters, callback, owner, isMainWindow);
             return view.ShowDialog();
         }

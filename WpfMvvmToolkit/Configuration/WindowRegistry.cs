@@ -68,10 +68,6 @@ namespace WpfMvvmToolkit.Configuration
 
             var registration = _viewModelRegistrationLookup[typeof(TWindowViewModel)];
 
-            var viewModel = _serviceContainer.Get<TWindowViewModel>();
-            viewModel.OnOpen(parameters);
-            viewModel.Close += ViewModel_Close;
-
             var view = (IWindowView)_serviceContainer.Get(registration.ViewType);
 
             if (isMainWindow)
@@ -89,6 +85,9 @@ namespace WpfMvvmToolkit.Configuration
                 view.Owner = _mainWindow;
             }
 
+            var viewModel = _serviceContainer.Get<TWindowViewModel>();
+            viewModel.Close += ViewModel_Close;
+
             view.DataContext = viewModel;
             view.Loaded += View_Loaded;
             view.Unloaded += View_Unloaded;
@@ -97,6 +96,8 @@ namespace WpfMvvmToolkit.Configuration
 
             _activeWindows.Add(viewModel, view);
             _callbacks.Add(viewModel, callback);
+
+            viewModel.OnOpen(parameters);
 
             return view;
         }

@@ -9,20 +9,20 @@ namespace WpfMvvmToolkit.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var dateTime = (DateTime?)value;
+            var dateTime = (DateTimeOffset?)value;
             if (!dateTime.HasValue)
             {
                 return string.Empty;
             }
             var format = (string)parameter;
-            return dateTime.Value.ToString(format, culture);
+            return dateTime.Value.LocalDateTime.ToString(format, culture);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var format = (string)parameter;
-            DateTime dateTime;
-            if (DateTime.TryParseExact((string)value, format, culture, DateTimeStyles.None, out dateTime))
+            DateTimeOffset dateTime;
+            if (DateTimeOffset.TryParseExact((string)value, format, culture, DateTimeStyles.None, out dateTime))
             {
                 return dateTime;
             }

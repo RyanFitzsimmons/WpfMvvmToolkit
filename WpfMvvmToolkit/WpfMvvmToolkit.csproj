@@ -7,13 +7,13 @@
 		<UseWindowsForms>true</UseWindowsForms>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>WPF MVVM Toolkit</Title>
-		<Description>A collection of basic tools</Description>
+		<Description>A collection of simple tools</Description>
 		<PackageProjectUrl>https://github.com/RyanFitzsimmons/WpfMvvmToolkit</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/RyanFitzsimmons/WpfMvvmToolkit</RepositoryUrl>
-		<PackageTags>WPF MVVM Simple Basic Configuration Commands DI</PackageTags>
+		<PackageTags>WPF MVVM Simple Configuration Commands DI Navigation</PackageTags>
 		<PackageReleaseNotes>The first release</PackageReleaseNotes>
 		<Authors>Ryan Fitzsimmons</Authors>
-		<Version>1.0.8</Version>
+		<Version>1.0.11</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

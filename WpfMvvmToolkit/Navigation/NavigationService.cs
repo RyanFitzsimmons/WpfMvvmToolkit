@@ -23,11 +23,7 @@ namespace WpfMvvmToolkit.Navigation
                 throw new Exception("The host is already registered.");
             }
 
-            if (parameters == null)
-            {
-                parameters = new();
-            }
-
+            parameters ??= new();
             _keepHistoryLookup.Add(host, keepHistory);
             _viewModels.Add(host, new());
             await NavigateToView(host, viewModel, parameters);
@@ -40,10 +36,7 @@ namespace WpfMvvmToolkit.Navigation
                 throw new Exception($"The view is not the current view");
             }
 
-            if (parameters == null)
-            {
-                parameters = new();
-            }
+            parameters ??= new();
 
             if (!from.CanNavigate(parameters))
             {
@@ -61,10 +54,7 @@ namespace WpfMvvmToolkit.Navigation
                 throw new Exception($"The view is not the current view");
             }
 
-            if (parameters == null)
-            {
-                parameters = new();
-            }
+            parameters ??= new();
 
             if (!from.CanNavigate(parameters))
             {
@@ -99,10 +89,7 @@ namespace WpfMvvmToolkit.Navigation
                 throw new Exception($"The view is not the current view");
             }
 
-            if (parameters == null)
-            {
-                parameters = new();
-            }
+            parameters ??= new();
 
             if (!force && !from.CanNavigate(parameters))
             {
@@ -115,12 +102,8 @@ namespace WpfMvvmToolkit.Navigation
 
         public async Task EndNavigation(INavigationHost host)
         {
-            var viewModel = GetCurrentViewModel(host);
-
-            if (viewModel == null)
-            {
+            var viewModel = GetCurrentViewModel(host) ??
                 throw new KeyNotFoundException($"There are no active view models for this host.");
-            }
 
             await EndNavigation(viewModel, force: true);
         }
@@ -141,6 +124,19 @@ namespace WpfMvvmToolkit.Navigation
             }
 
             return currentViewModel.CanNavigate(new());
+        }
+
+        public INavigationHost? GetHost(INavigationAware viewModel)
+        {
+            foreach (var navigation in _viewModels)
+            {
+                if (navigation.Value.Contains(viewModel))
+                {
+                    return navigation.Key;
+                }
+            }
+
+            return null;
         }
 
         private INavigationAware? GetCurrentViewModel(INavigationHost host)

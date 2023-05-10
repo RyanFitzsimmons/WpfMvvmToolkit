@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.DirectoryServices.ActiveDirectory;
-using System.Formats.Asn1;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Forms.Design;
+using WpfMvvmToolkit.Attributes;
 using WpfMvvmToolkit.Dialogs;
 using WpfMvvmToolkit.Exceptions;
 using WpfMvvmToolkit.Messaging;
 using WpfMvvmToolkit.Navigation;
 using WpfMvvmToolkit.Serialization;
-using WpfMvvmToolkit.Windows;
 
 namespace WpfMvvmToolkit.Configuration
 {
@@ -155,11 +151,17 @@ namespace WpfMvvmToolkit.Configuration
 
             foreach (var c in classes)
             {
-                var i = allTypes.SingleOrDefault(x => x.IsInterface && x.Name == $"I{c.Name}");
+                var bindAtt = c.GetCustomAttribute<BindAttribute>();
+                var i = bindAtt?.InterfaceType;
 
-                if (i == null)
+                if (bindAtt == null)
                 {
-                    continue;
+                    i = allTypes.SingleOrDefault(x => x.IsInterface && x.Name == $"I{c.Name}");
+
+                    if (i == null)
+                    {
+                        continue;
+                    }
                 }
 
                 var ignore = _onRegisterIgnore?.Invoke(i, c) ?? false;
@@ -185,11 +187,17 @@ namespace WpfMvvmToolkit.Configuration
 
             foreach (var c in classes)
             {
-                var i = allTypes.SingleOrDefault(x => x.IsInterface && x.Name == $"I{c.Name}");
+                var bindAtt = c.GetCustomAttribute<BindAttribute>();
+                var i = bindAtt?.InterfaceType;
 
-                if (i == null)
+                if (bindAtt == null)
                 {
-                    continue;
+                    i = allTypes.SingleOrDefault(x => x.IsInterface && x.Name == $"I{c.Name}");
+
+                    if (i == null)
+                    {
+                        continue;
+                    }
                 }
 
                 var ignore = _onRegisterIgnore?.Invoke(i, c) ?? false;

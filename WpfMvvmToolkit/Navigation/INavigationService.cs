@@ -11,5 +11,6 @@ namespace WpfMvvmToolkit.Navigation
         Task EndNavigation(INavigationAware from, NavigationParameters? parameters = null, bool force = false);
         Task EndNavigation(INavigationHost host);
         bool CanClose(INavigationHost host);
+        INavigationHost? GetHost(INavigationAware viewModel);
     }
 }
