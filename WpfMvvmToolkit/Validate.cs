@@ -5,7 +5,7 @@ namespace WpfMvvmToolkit
 {
     public static class Validate
     {
-        public static IEnumerable<string> String(string? value, bool canBeEmpty = true, int minLength = 0, int maxLength = 0)
+        public static IEnumerable<string> String(string? value, bool canBeEmpty = true, int minLength = int.MaxValue, int maxLength = 0)
         {
             if (!canBeEmpty && string.IsNullOrWhiteSpace(value))
             {
