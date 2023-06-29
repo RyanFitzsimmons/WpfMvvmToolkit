@@ -5,16 +5,34 @@ namespace WpfMvvmToolkit
 {
     public static class Validate
     {
-        public static IEnumerable<string> String(string? value, bool canBeEmpty = true, int maxLength = 0)
+        public static IEnumerable<string> String(string? value, bool canBeEmpty = true, int minLength = 0, int maxLength = 0)
         {
             if (!canBeEmpty && string.IsNullOrWhiteSpace(value))
             {
                 yield return "Cannot be empty";
             }
 
+            if (minLength > 0 && value?.Length < minLength)
+            {
+                yield return $"Cannot be shorter than {minLength}";
+            }
+
             if (maxLength > 0 && value?.Length > maxLength)
             {
                 yield return $"Cannot be longer than {maxLength}";
+            }
+        }
+
+        public static IEnumerable<string> Integer(int value, int min = int.MinValue, int max = int.MaxValue)
+        {
+            if (value < min)
+            {
+                yield return $"Cannot be less than {min}";
+            }
+
+            if (value > max)
+            {
+                yield return $"Cannot be greater than {max}";
             }
         }
 
