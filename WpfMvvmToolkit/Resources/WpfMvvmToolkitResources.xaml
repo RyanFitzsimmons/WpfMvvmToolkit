@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:converters="clr-namespace:WpfMvvmToolkit.Converters">
-    <converters:DateTimeConverter x:Key="dateTimeOffsetConverter" />
+    <converters:DateTimeOffsetConverter x:Key="dateTimeOffsetConverter" />
     <converters:DateTimeConverter x:Key="dateTimeConverter" />
     <converters:DateOnlyConverter x:Key="dateOnlyConverter" />
 </ResourceDictionary>
