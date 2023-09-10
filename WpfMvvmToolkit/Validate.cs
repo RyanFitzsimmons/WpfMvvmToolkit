@@ -64,6 +64,11 @@ namespace WpfMvvmToolkit
 
             DirectoryInfo directory = new(directoryPath);
 
+            if (PathIsValid(directory.FullName))
+            {
+                yield return $"The directory path is invalid {directory.FullName}";
+            }
+
             if (shouldExist && !directory.Exists)
             {
                 yield return $"The directory does not exist {directory.FullName}";
@@ -90,6 +95,11 @@ namespace WpfMvvmToolkit
 
             FileInfo file = new(filePath);
 
+            if (FilePathIsValid(file.FullName))
+            {
+                yield return $"The file path is invalid {file.FullName}";
+            }
+
             if (shouldExist && !file.Exists)
             {
                 yield return $"The file does not exist {file.FullName}";
@@ -106,6 +116,33 @@ namespace WpfMvvmToolkit
             if (obj == null && !canBeNull)
             {
                 yield return "The value cannot be null";
+            }
+        }
+
+        private static bool FilePathIsValid(string filePath)
+        {
+            try
+            {
+                _ = Path.GetFullPath(filePath);
+                _ = Path.GetFileName(filePath);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static bool PathIsValid(string directoryPath)
+        {
+            try
+            {
+                _ = Path.GetFullPath(directoryPath);
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
     }
