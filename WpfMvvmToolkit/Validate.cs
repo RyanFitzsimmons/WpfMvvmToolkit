@@ -64,7 +64,7 @@ namespace WpfMvvmToolkit
 
             DirectoryInfo directory = new(directoryPath);
 
-            if (PathIsValid(directory.FullName))
+            if (!PathIsValid(directory.FullName))
             {
                 yield return $"The directory path is invalid {directory.FullName}";
             }
@@ -95,7 +95,7 @@ namespace WpfMvvmToolkit
 
             FileInfo file = new(filePath);
 
-            if (FilePathIsValid(file.FullName))
+            if (!FilePathIsValid(file.FullName))
             {
                 yield return $"The file path is invalid {file.FullName}";
             }
