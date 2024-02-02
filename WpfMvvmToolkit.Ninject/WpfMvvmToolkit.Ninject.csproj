@@ -12,12 +12,12 @@
 		<PackageTags>WPF MVVM Simple Basic Configuration Commands</PackageTags>
 		<PackageReleaseNotes>The first release</PackageReleaseNotes>
 		<Authors>Ryan Fitzsimmons</Authors>
-		<Version>1.0.7</Version>
+		<Version>1.0.8</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Ninject" Version="3.3.6" />
-		<PackageReference Include="WpfMvvmToolkit" Version="1.0.16" />
+		<PackageReference Include="WpfMvvmToolkit" Version="1.0.17" />
 	</ItemGroup>
 
 </Project>
