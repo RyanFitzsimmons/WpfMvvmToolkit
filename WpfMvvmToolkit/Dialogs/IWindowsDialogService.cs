@@ -1,9 +1,13 @@
-﻿using WpfMvvmToolkit.Windows;
+﻿using System;
+using WpfMvvmToolkit.Windows;
 
 namespace WpfMvvmToolkit.Dialogs;
 
 public interface IWindowsDialogService
 {
+    event EventHandler? BeforeShowingDialog;
+    event EventHandler? AfterShowingDialog;
+
     void ShowOkErrorMessageBox(string message, string caption = "Error", IWindowViewModel? owner = null);
 
     void ShowOkInfoMessageBox(string message, string caption = "Information", IWindowViewModel? owner = null);
