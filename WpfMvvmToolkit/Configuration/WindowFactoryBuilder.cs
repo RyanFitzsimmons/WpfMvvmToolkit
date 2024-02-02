@@ -42,6 +42,7 @@ namespace WpfMvvmToolkit.Configuration
 
         private void RegisterBuiltInServices(IServiceContainer container)
         {
+            container.RegisterConstant<IMessageService>(MessageService.Instance);
             Register(container, typeof(IMessageService), typeof(MessageService));
             Register(container, typeof(INavigationService), typeof(NavigationService));
             Register(container, typeof(IJsonSerializationService), typeof(JsonSerializationService));
@@ -244,6 +245,11 @@ namespace WpfMvvmToolkit.Configuration
         {
             _onRegisterIgnore = onRegisterIgnore;
             return this;
+        }
+
+        private void Register<T>(IServiceContainer container, T constant)
+        {
+            container.RegisterConstant<T>(constant);
         }
 
         private void Register(IServiceContainer container, Type serviceInterface, Type serviceImplementation)

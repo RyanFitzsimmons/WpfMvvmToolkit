@@ -3,11 +3,15 @@ using System.Collections.Generic;
 
 namespace WpfMvvmToolkit.Messaging
 {
-    public class MessageService : IMessageService
+    public sealed class MessageService : IMessageService
     {
         private readonly Dictionary<object, List<IMessageSubscriptionToken>> _hostSubscriptions = new();
         private readonly Dictionary<Type, Dictionary<Guid, IMessageSubscriptionToken>> _subscriptions = new();
 
+        private MessageService() { }
+
+        public static MessageService Instance { get; } = new();
+        
         public TRequest Send<TMessage, TRequest>(TMessage message) where TMessage : RequestMessage<TRequest>
         {
             Send(message);
