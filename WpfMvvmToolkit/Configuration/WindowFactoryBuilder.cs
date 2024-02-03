@@ -43,7 +43,6 @@ namespace WpfMvvmToolkit.Configuration
         private void RegisterBuiltInServices(IServiceContainer container)
         {
             container.RegisterConstant<IMessageService>(MessageService.Instance);
-            Register(container, typeof(IMessageService), typeof(MessageService));
             Register(container, typeof(INavigationService), typeof(NavigationService));
             Register(container, typeof(IJsonSerializationService), typeof(JsonSerializationService));
             Register(container, typeof(IWindowsDialogService), typeof(WindowsDialogService));
