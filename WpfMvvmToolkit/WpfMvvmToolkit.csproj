@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0-windows</TargetFramework>
+		<TargetFrameworks>net6.0-windows;net8.0-windows</TargetFrameworks>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
@@ -11,9 +11,9 @@
 		<PackageProjectUrl>https://github.com/RyanFitzsimmons/WpfMvvmToolkit</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/RyanFitzsimmons/WpfMvvmToolkit</RepositoryUrl>
 		<PackageTags>WPF MVVM Simple Configuration Commands DI Navigation</PackageTags>
-		<PackageReleaseNotes>The first release</PackageReleaseNotes>
+		<PackageReleaseNotes>Added support for .net8.0</PackageReleaseNotes>
 		<Authors>Ryan Fitzsimmons</Authors>
-		<Version>1.0.18</Version>
+		<Version>1.0.19</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
