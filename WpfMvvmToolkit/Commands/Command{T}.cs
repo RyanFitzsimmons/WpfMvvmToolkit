@@ -50,12 +50,12 @@ namespace WpfMvvmToolkit.Commands
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private static ArgumentException GetArgumentException(object? parameter)
+        internal static ArgumentException GetArgumentException(object? parameter)
         {
             return new ArgumentException($"The parameter must be of type {typeof(T)}.");
         }
 
-        private static bool TryGetCommandArgument(object? parameter, out T? commandArgument)
+        internal static bool TryGetCommandArgument(object? parameter, out T? commandArgument)
         {
             if (parameter == null && default(T) is null)
             {
