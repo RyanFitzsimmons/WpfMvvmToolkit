@@ -17,6 +17,7 @@ namespace WpfMvvmToolkit.Serilog
             Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Is(LogEventLevel.Debug)
                 .WriteTo.File($@"{directory.FullName}\log.txt", rollingInterval: RollingInterval.Day)
+                .WriteTo.Debug()
             .CreateLogger();
 
             serviceContainer.RegisterConstant<ILogger>(Log.Logger);
