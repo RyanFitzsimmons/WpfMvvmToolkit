@@ -13,7 +13,7 @@
 		<PackageTags>WPF MVVM Simple Configuration Commands DI Navigation</PackageTags>
 		<PackageReleaseNotes>Added support for .net8.0</PackageReleaseNotes>
 		<Authors>Ryan Fitzsimmons</Authors>
-		<Version>1.0.19</Version>
+		<Version>1.0.20</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
