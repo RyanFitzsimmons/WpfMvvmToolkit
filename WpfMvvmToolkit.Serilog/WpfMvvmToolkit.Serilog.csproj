@@ -12,12 +12,12 @@
 		<PackageTags>WPF MVVM Simple Basic Configuration Commands</PackageTags>
 		<PackageReleaseNotes>Added support for .net8.0</PackageReleaseNotes>
 		<Authors>Ryan Fitzsimmons</Authors>
-		<Version>1.0.10</Version>
+		<Version>1.0.12</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-		<PackageReference Include="WpfMvvmToolkit" Version="1.0.19" />
+		<PackageReference Include="WpfMvvmToolkit" Version="1.0.20" />
 	</ItemGroup>
 
 </Project>
