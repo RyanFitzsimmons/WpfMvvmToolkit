@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace WpfMvvmToolkit.Messaging
 {
@@ -7,14 +9,37 @@ namespace WpfMvvmToolkit.Messaging
         /// <summary>
         /// Subscribing with a host allows the use of the UnsubscribeFromAll method.
         /// </summary>
-        /// <typeparam name="TMessage"></typeparam>
-        /// <param name="host"></param>
-        /// <param name="messageDelegate"></param>
-        void Subscribe<TMessage>(object host, Action<TMessage> messageDelegate) where TMessage : class;
-        IMessageSubscriptionToken Subscribe<TMessage>(Action<TMessage> messageDelegate) where TMessage : class;
+        void Subscribe<TMessage>(object host, Action<TMessage> messageDelegate)
+            where TMessage : class, IMessage;
+
+        /// <summary>
+        /// Subscribing with a host allows the use of the UnsubscribeFromAll method.
+        /// </summary>
+        void SubscribeAsync<TMessage>(object host, Func<TMessage, Task> messageDelegate)
+            where TMessage : class, IAsyncMessage;
+
+        IMessageSubscriptionToken Subscribe<TMessage>(Action<TMessage> messageDelegate)
+            where TMessage : class, IMessage;
+
+        IAsyncMessageSubscriptionToken SubscribeAsync<TMessage>(Func<TMessage, Task> messageDelegate)
+            where TMessage : class, IAsyncMessage;
+
         void UnsubscribeFromAll(object host);
+
         void Unsubscribe(IMessageSubscriptionToken token);
-        void Send<TMessage>(TMessage message) where TMessage : class;
-        TRequest Send<TMessage, TRequest>(TMessage message) where TMessage : RequestMessage<TRequest>;
+
+        void UnsubscribeAsync(IAsyncMessageSubscriptionToken token);
+
+        void Send<TMessage>(TMessage message)
+            where TMessage : class, IMessage;
+
+        Task SendAsync<TMessage>(TMessage message)
+            where TMessage : class, IAsyncMessage;
+
+        TRequest Send<TMessage, TRequest>(TMessage message)
+            where TMessage : RequestMessage<TRequest>, IMessage;
+
+        Task<TRequest> SendAsync<TMessage, TRequest>(TMessage message)
+            where TMessage : AsyncRequestMessage<TRequest>, IAsyncMessage;
     }
 }

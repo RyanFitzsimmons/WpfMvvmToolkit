@@ -1,75 +1,133 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace WpfMvvmToolkit.Messaging
+namespace WpfMvvmToolkit.Messaging;
+
+public sealed class MessageService : IMessageService
 {
-    public sealed class MessageService : IMessageService
+    private readonly Dictionary<object, List<IMessageSubscriptionToken>> _hostSubscriptions = new();
+    private readonly Dictionary<object, List<IAsyncMessageSubscriptionToken>> _hostAsyncSubscriptions = new();
+    private readonly Dictionary<Type, Dictionary<Guid, IMessageSubscriptionToken>> _subscriptions = new();
+    private readonly Dictionary<Type, Dictionary<Guid, IAsyncMessageSubscriptionToken>> _asyncSubscriptions = new();
+
+    private MessageService() { }
+
+    public static MessageService Instance { get; } = new();
+
+    public TRequest Send<TMessage, TRequest>(TMessage message)
+        where TMessage : RequestMessage<TRequest>, IMessage
     {
-        private readonly Dictionary<object, List<IMessageSubscriptionToken>> _hostSubscriptions = new();
-        private readonly Dictionary<Type, Dictionary<Guid, IMessageSubscriptionToken>> _subscriptions = new();
+        Send(message);
+        return message.Requested;
+    }
 
-        private MessageService() { }
+    public void Send<TMessage>(TMessage message)
+        where TMessage : class, IMessage
+    {
+        var messageType = typeof(TMessage);
 
-        public static MessageService Instance { get; } = new();
-        
-        public TRequest Send<TMessage, TRequest>(TMessage message) where TMessage : RequestMessage<TRequest>
+        if (!_subscriptions.ContainsKey(messageType))
         {
-            Send(message);
-            return message.Requested;
+            return;
         }
 
-        public void Send<TMessage>(TMessage message) where TMessage : class
+        foreach (var subscription in _subscriptions[messageType].Values)
         {
-            var messageType = typeof(TMessage);
+            subscription.Invoke(message);
+        }
+    }
 
-            if (!_subscriptions.ContainsKey(messageType))
-            {
-                return;
-            }
+    public async Task<TRequest> SendAsync<TMessage, TRequest>(TMessage message)
+        where TMessage : AsyncRequestMessage<TRequest>, IAsyncMessage
+    {
+        await SendAsync(message);
+        return message.Requested;
+    }
 
-            foreach (var subscription in _subscriptions[messageType].Values)
-            {
-                subscription.Invoke(message);
-            }
+    public async Task SendAsync<TMessage>(TMessage message)
+        where TMessage : class, IAsyncMessage
+    {
+        var messageType = typeof(TMessage);
+
+        if (!_asyncSubscriptions.ContainsKey(messageType))
+        {
+            return;
         }
 
-        public void Subscribe<TMessage>(object host, Action<TMessage> messageDelegate) where TMessage : class
+        foreach (var subscription in _asyncSubscriptions[messageType].Values)
         {
-            if (!_hostSubscriptions.ContainsKey(host))
-            {
-                _hostSubscriptions.Add(host, new());
-            }
+            await subscription.Invoke(message);
+        }
+    }
 
-            _hostSubscriptions[host].Add(Subscribe(messageDelegate));
+    public void Subscribe<TMessage>(object host, Action<TMessage> messageDelegate)
+        where TMessage : class, IMessage
+    {
+        if (!_hostSubscriptions.ContainsKey(host))
+        {
+            _hostSubscriptions.Add(host, new());
         }
 
-        public IMessageSubscriptionToken Subscribe<TMessage>(Action<TMessage> messageDelegate) where TMessage : class
+        _hostSubscriptions[host].Add(Subscribe(messageDelegate));
+    }
+
+    public IMessageSubscriptionToken Subscribe<TMessage>(Action<TMessage> messageDelegate)
+        where TMessage : class, IMessage
+    {
+        MessageSubscriptionToken<TMessage> token = new(messageDelegate);
+
+        if (!_subscriptions.ContainsKey(token.MessageType))
         {
-            MessageSubscriptionToken<TMessage> token = new(messageDelegate);
-
-            if (!_subscriptions.ContainsKey(token.MessageType))
-            {
-                _subscriptions.Add(token.MessageType, new());
-            }
-
-            if (_subscriptions[token.MessageType].ContainsKey(token.Guid))
-            {
-                throw new Exception("Duplicate Guid!");
-            }
-
-            _subscriptions[token.MessageType].Add(token.Guid, token);
-
-            return token;
+            _subscriptions.Add(token.MessageType, new());
         }
 
-        public void UnsubscribeFromAll(object host)
+        if (_subscriptions[token.MessageType].ContainsKey(token.Guid))
         {
-            if (!_hostSubscriptions.ContainsKey(host))
-            {
-                throw new Exception("There are no subscriptions for the host.");
-            }
+            throw new Exception("Duplicate Guid!");
+        }
 
-            foreach (var token in _hostSubscriptions[host])
+        _subscriptions[token.MessageType].Add(token.Guid, token);
+
+        return token;
+    }
+
+    public void SubscribeAsync<TMessage>(object host, Func<TMessage, Task> messageDelegate)
+        where TMessage : class, IAsyncMessage
+    {
+        if (!_hostAsyncSubscriptions.ContainsKey(host))
+        {
+            _hostAsyncSubscriptions.Add(host, new());
+        }
+
+        _hostAsyncSubscriptions[host].Add(SubscribeAsync(messageDelegate));
+    }
+
+    public IAsyncMessageSubscriptionToken SubscribeAsync<TMessage>(Func<TMessage, Task> messageDelegate)
+        where TMessage : class, IAsyncMessage
+    {
+        AsyncMessageSubscriptionToken<TMessage> token = new(messageDelegate);
+
+        if (!_asyncSubscriptions.ContainsKey(token.MessageType))
+        {
+            _asyncSubscriptions.Add(token.MessageType, new());
+        }
+
+        if (_asyncSubscriptions[token.MessageType].ContainsKey(token.Guid))
+        {
+            throw new Exception("Duplicate Guid!");
+        }
+
+        _asyncSubscriptions[token.MessageType].Add(token.Guid, token);
+
+        return token;
+    }
+
+    public void UnsubscribeFromAll(object host)
+    {
+        if (_hostSubscriptions.TryGetValue(host, out var subscription))
+        {
+            foreach (var token in subscription)
             {
                 Unsubscribe(token);
             }
@@ -77,15 +135,36 @@ namespace WpfMvvmToolkit.Messaging
             _hostSubscriptions.Remove(host);
         }
 
-        public void Unsubscribe(IMessageSubscriptionToken token)
+        if (_hostAsyncSubscriptions.TryGetValue(host, out var asyncSubscription))
         {
-            if (!_subscriptions.ContainsKey(token.MessageType) ||
-                !_subscriptions[token.MessageType].ContainsKey(token.Guid))
+            foreach (var token in asyncSubscription)
             {
-                return;
+                UnsubscribeAsync(token);
             }
 
-            _subscriptions[token.MessageType].Remove(token.Guid);
+            _hostAsyncSubscriptions.Remove(host);
         }
+    }
+
+    public void Unsubscribe(IMessageSubscriptionToken token)
+    {
+        if (!_subscriptions.ContainsKey(token.MessageType) ||
+            !_subscriptions[token.MessageType].ContainsKey(token.Guid))
+        {
+            return;
+        }
+
+        _subscriptions[token.MessageType].Remove(token.Guid);
+    }
+
+    public void UnsubscribeAsync(IAsyncMessageSubscriptionToken token)
+    {
+        if (!_asyncSubscriptions.ContainsKey(token.MessageType) ||
+            !_asyncSubscriptions[token.MessageType].ContainsKey(token.Guid))
+        {
+            return;
+        }
+
+        _asyncSubscriptions[token.MessageType].Remove(token.Guid);
     }
 }

@@ -2,7 +2,7 @@ using FluentAssertions;
 
 namespace WpfMvvmToolkit.UnitTests
 {
-    public class UnitTest1
+    public class ValidateTests
     {
         [Fact]
         public void ValidateFile_ValidFilePath()

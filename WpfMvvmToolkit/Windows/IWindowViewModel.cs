@@ -11,6 +11,5 @@ namespace WpfMvvmToolkit.Windows
         void OnOpen(NavigationParameters parameters);
         void OnClosing(CancelEventArgs e);
         Task OnClose();
-
     }
 }
