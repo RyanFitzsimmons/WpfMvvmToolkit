@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>net6.0-windows;net8.0-windows</TargetFrameworks>
 		<Nullable>enable</Nullable>
+		<WarningsAsErrors>Nullable</WarningsAsErrors>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -13,7 +14,7 @@
 		<PackageTags>WPF MVVM Simple Configuration Commands DI Navigation</PackageTags>
 		<PackageReleaseNotes>Added support for .net8.0</PackageReleaseNotes>
 		<Authors>Ryan Fitzsimmons</Authors>
-		<Version>1.0.22</Version>
+		<Version>1.0.23</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

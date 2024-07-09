@@ -48,11 +48,12 @@ namespace WpfMvvmToolkit.Configuration
             Register(container, typeof(IWindowsDialogService), typeof(WindowsDialogService));
         }
 
-        public IWindowFactory Build()
+        public void CompleteRegistration()
         {
             var serviceContainer = GetServiceContainer();
             serviceContainer.RegisterConstant(serviceContainer);
-            serviceContainer.Register<IWindowRegistry, WindowRegistry>(ScopeType.Singleton);
+            WindowRegistry windowRegistry = new(serviceContainer);
+            serviceContainer.RegisterConstant<IWindowRegistry>(windowRegistry);
             RegisterBuiltInServices(serviceContainer);
             RegisterServicesFromAssemblies(serviceContainer);
             RegisterViewModelsFromAssemblies(serviceContainer);
@@ -62,7 +63,6 @@ namespace WpfMvvmToolkit.Configuration
                 configure(serviceContainer);
             }
 
-            var windowRegistry = serviceContainer.Get<IWindowRegistry>();
             RegisterWindowsFromAssemblies(windowRegistry);
 
             foreach (var register in _registerDelegates)
@@ -72,8 +72,13 @@ namespace WpfMvvmToolkit.Configuration
 
             serviceContainer.Register<IWindowFactory, WindowFactory>(ScopeType.Singleton);
             AutoInstantiate(serviceContainer);
+        }
 
-            return serviceContainer.Get<IWindowFactory>();
+        public IWindowFactory Build()
+        {
+            CompleteRegistration();
+            var serviceContainer = GetServiceContainer();
+            return serviceContainer.Get<IWindowFactory>()!;
         }
 
         private void AutoInstantiate(IServiceContainer serviceContainer)
@@ -164,14 +169,14 @@ namespace WpfMvvmToolkit.Configuration
                     }
                 }
 
-                var ignore = _onRegisterIgnore?.Invoke(i, c) ?? false;
+                var ignore = _onRegisterIgnore?.Invoke(i!, c) ?? false;
 
                 if (ignore)
                 {
                     continue;
                 }
 
-                if (!i.IsAssignableFrom(c))
+                if (!i!.IsAssignableFrom(c))
                 {
                     throw new IncompatibleTypeRegistrationException(i, c);
                 }
@@ -200,14 +205,14 @@ namespace WpfMvvmToolkit.Configuration
                     }
                 }
 
-                var ignore = _onRegisterIgnore?.Invoke(i, c) ?? false;
+                var ignore = _onRegisterIgnore?.Invoke(i!, c) ?? false;
 
                 if (ignore)
                 {
                     continue;
                 }
 
-                if (!i.IsAssignableFrom(c))
+                if (!i!.IsAssignableFrom(c))
                 {
                     throw new IncompatibleTypeRegistrationException(i, c);
                 }
@@ -246,7 +251,7 @@ namespace WpfMvvmToolkit.Configuration
             return this;
         }
 
-        private void Register<T>(IServiceContainer container, T constant)
+        private void Register<T>(IServiceContainer container, T constant) where T : class
         {
             container.RegisterConstant<T>(constant);
         }

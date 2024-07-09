@@ -42,7 +42,7 @@ public class WindowsDialogService : IWindowsDialogService
         {
             Description = "Directory",
             UseDescriptionForTitle = true,
-            SelectedPath = initialDirectoryPath,
+            SelectedPath = initialDirectoryPath ?? "",
             ShowNewFolderButton = true
         };
 

@@ -68,7 +68,12 @@ namespace WpfMvvmToolkit.Configuration
 
             var registration = _viewModelRegistrationLookup[typeof(TWindowViewModel)];
 
-            var view = (IWindowView)_serviceContainer.Get(registration.ViewType);
+            var view = _serviceContainer.Get(registration.ViewType) as IWindowView;
+
+            if (view == null)
+            {
+                throw new Exception($"The view type {registration.ViewType} has not been registered in the service collection");
+            }
 
             if (isMainWindow)
             {
@@ -86,6 +91,12 @@ namespace WpfMvvmToolkit.Configuration
             }
 
             var viewModel = _serviceContainer.Get<TWindowViewModel>();
+
+            if (viewModel == null)
+            {
+                throw new Exception($"The view model type {typeof(TWindowViewModel).Name} has not been registered in the service collection");
+            }
+
             viewModel.Close += ViewModel_Close;
 
             view.DataContext = viewModel;

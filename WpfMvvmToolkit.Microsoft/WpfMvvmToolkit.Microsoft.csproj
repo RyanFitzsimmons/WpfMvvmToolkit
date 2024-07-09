@@ -6,18 +6,20 @@
 		<Nullable>enable</Nullable>
 		<WarningsAsErrors>Nullable</WarningsAsErrors>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<Title>WPF MVVM Toolkit Ninject</Title>
-		<Description>For ninject dependancy injection</Description>
+		<Title>WPF MVVM Toolkit Microsoft</Title>
+		<Description>For microsoft dependancy injection</Description>
 		<PackageProjectUrl>https://github.com/RyanFitzsimmons/WpfMvvmToolkit</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/RyanFitzsimmons/WpfMvvmToolkit</RepositoryUrl>
 		<PackageTags>WPF MVVM Simple Basic Configuration Commands</PackageTags>
 		<PackageReleaseNotes>Added support for .net8.0</PackageReleaseNotes>
 		<Authors>Ryan Fitzsimmons</Authors>
-		<Version>1.0.14</Version>
+		<Version>1.0.1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Ninject" Version="3.3.6" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
 		<PackageReference Include="WpfMvvmToolkit" Version="1.0.23" />
 	</ItemGroup>
 

@@ -62,12 +62,12 @@ namespace WpfMvvmToolkit.Ninject
             }
         }
 
-        public void RegisterConstant<T1>(T1 constant)
+        public void RegisterConstant<T1>(T1 constant) where T1 : class
         {
             _kernel.Bind<T1>().ToConstant(constant);
         }
 
-        public void Register<T1>(Func<T1> factoryDelegate)
+        public void Register<T1>(Func<T1> factoryDelegate) where T1 : class
         {
             _kernel.Bind<T1>().ToMethod<T1>((context) => factoryDelegate());
         }

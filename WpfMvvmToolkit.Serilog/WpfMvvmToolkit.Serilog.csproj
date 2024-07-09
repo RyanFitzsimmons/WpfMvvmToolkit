@@ -4,6 +4,7 @@
 		<TargetFrameworks>net6.0-windows;net8.0-windows</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<WarningsAsErrors>Nullable</WarningsAsErrors>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>WPF MVVM Toolkit Serilog</Title>
 		<Description>For using Serilog file sink with the WpfMvvmToolkit</Description>
@@ -12,13 +13,13 @@
 		<PackageTags>WPF MVVM Simple Basic Configuration Commands</PackageTags>
 		<PackageReleaseNotes>Added support for .net8.0</PackageReleaseNotes>
 		<Authors>Ryan Fitzsimmons</Authors>
-		<Version>1.0.13</Version>
+		<Version>1.0.14</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
-		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-		<PackageReference Include="WpfMvvmToolkit" Version="1.0.22" />
+		<PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
+		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+		<PackageReference Include="WpfMvvmToolkit" Version="1.0.23" />
 	</ItemGroup>
 
 </Project>
