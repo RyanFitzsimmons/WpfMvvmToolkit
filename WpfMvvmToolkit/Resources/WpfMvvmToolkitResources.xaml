@@ -4,4 +4,5 @@
     <converters:DateTimeOffsetConverter x:Key="dateTimeOffsetConverter" />
     <converters:DateTimeConverter x:Key="dateTimeConverter" />
     <converters:DateOnlyConverter x:Key="dateOnlyConverter" />
+    <converters:VisibilityConverter x:Key="visibilityConverter" />
 </ResourceDictionary>
