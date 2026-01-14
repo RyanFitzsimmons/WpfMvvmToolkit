@@ -14,7 +14,7 @@ public interface IWindowsDialogService
 
     void ShowOkWarningMessageBox(string message, string caption = "Warning", IWindowViewModel? owner = null);
 
-    string? ShowOpenFileDialog(string filter = "All files (*.*) | *.*", string? initialDirectoryPath = null, IWindowViewModel? owner = null);
+    string? ShowOpenFileDialog(string filter = "All files (*.*) | *.*", string? initialDirectoryPath = null, string? fileName = null, IWindowViewModel? owner = null);
 
     string[] ShowOpenMultipleFilesDialog(string filter = "All files (*.*) | *.*", string? initialDirectoryPath = null, IWindowViewModel? owner = null);
 
@@ -24,7 +24,7 @@ public interface IWindowsDialogService
 
     bool ShowYesNoWarningMessageBox(string message, string caption = "Warning", IWindowViewModel? owner = null);
 
-    string? ShowSaveFileDialog(string filter = "All files (*.*) | *.*", string? initialDirectoryPath = null, IWindowViewModel? owner = null);
+    string? ShowSaveFileDialog(string filter = "All files (*.*) | *.*", string? initialDirectoryPath = null, string? fileName = null, IWindowViewModel? owner = null);
 
     string? ShowSelectDirectoryDialog(string? initialDirectoryPath = null);
 }

@@ -92,13 +92,14 @@ public class WindowsDialogService : IWindowsDialogService
         AfterShowingDialog?.Invoke(this, EventArgs.Empty);
     }
 
-    public string? ShowOpenFileDialog(string filter = "All files (*.*) | *.*", string? initialDirectoryPath = null, IWindowViewModel? owner = null)
+    public string? ShowOpenFileDialog(string filter = "All files (*.*) | *.*", string? initialDirectoryPath = null, string? fileName = null, IWindowViewModel? owner = null)
     {
         BeforeShowingDialog?.Invoke(this, EventArgs.Empty);
         var dialog = new OpenFileDialog
         {
             InitialDirectory = initialDirectoryPath,
             Filter = filter,
+            FileName = fileName
         };
 
         if (dialog.ShowDialog(GetDialogOwnerWindow(owner)) == true)
@@ -137,13 +138,14 @@ public class WindowsDialogService : IWindowsDialogService
         }
     }
 
-    public string? ShowSaveFileDialog(string filter = "All files (*.*) | *.*", string? initialDirectoryPath = null, IWindowViewModel? owner = null)
+    public string? ShowSaveFileDialog(string filter = "All files (*.*) | *.*", string? initialDirectoryPath = null, string? fileName = null, IWindowViewModel? owner = null)
     {
         BeforeShowingDialog?.Invoke(this, EventArgs.Empty);
         var dialog = new SaveFileDialog
         {
             InitialDirectory = initialDirectoryPath,
             Filter = filter,
+            FileName = fileName
         };
 
         if (dialog.ShowDialog(GetDialogOwnerWindow(owner)) == true)
