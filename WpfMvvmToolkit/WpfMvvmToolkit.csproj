@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0-windows;net8.0-windows</TargetFrameworks>
+		<TargetFrameworks>net6.0-windows;net8.0-windows;net10.0-windows</TargetFrameworks>
 		<Nullable>enable</Nullable>
 		<WarningsAsErrors>Nullable</WarningsAsErrors>
 		<UseWPF>true</UseWPF>
@@ -12,7 +12,7 @@
 		<PackageProjectUrl>https://github.com/RyanFitzsimmons/WpfMvvmToolkit</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/RyanFitzsimmons/WpfMvvmToolkit</RepositoryUrl>
 		<PackageTags>WPF MVVM Simple Configuration Commands DI Navigation</PackageTags>
-		<PackageReleaseNotes>Added support for .net8.0</PackageReleaseNotes>
+		<PackageReleaseNotes>Added support for .net10.0</PackageReleaseNotes>
 		<Authors>Ryan Fitzsimmons</Authors>
 		<Version>1.0.25</Version>
 	</PropertyGroup>
