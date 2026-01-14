@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0-windows;net8.0-windows</TargetFrameworks>
+		<TargetFrameworks>net6.0-windows;net8.0-windows;net10.0-windows</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<WarningsAsErrors>Nullable</WarningsAsErrors>
@@ -11,14 +11,14 @@
 		<PackageProjectUrl>https://github.com/RyanFitzsimmons/WpfMvvmToolkit</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/RyanFitzsimmons/WpfMvvmToolkit</RepositoryUrl>
 		<PackageTags>WPF MVVM Simple Basic Configuration Commands</PackageTags>
-		<PackageReleaseNotes>Added support for .net8.0</PackageReleaseNotes>
+		<PackageReleaseNotes>Added support for .net10.0</PackageReleaseNotes>
 		<Authors>Ryan Fitzsimmons</Authors>
-		<Version>1.0.14</Version>
+		<Version>1.0.15</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Ninject" Version="3.3.6" />
-		<PackageReference Include="WpfMvvmToolkit" Version="1.0.23" />
+		<PackageReference Include="WpfMvvmToolkit" Version="1.0.25" />
 	</ItemGroup>
 
 </Project>
